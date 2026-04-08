@@ -1350,29 +1350,37 @@
 
     </div>
 
-    <!-- Script de Delay do VTurb -->
+    <!-- Script de Delay do VTurb (Híbrido) -->
     <script type="text/javascript">
-      /* CONFIGURAÇÃO DO DELAY VIA VTURB */
+      /* CONFIGURAÇÃO DO DELAY BLINDADO */
       var SECONDS_TO_WAIT = 478; /* 7 min e 58 seg */
       var ELEMENT_ID = 'vsl-delay';
-
-      /* Não altere as linhas abaixo */
       var alreadyShown = false;
+
       var showElement = function() {
         if (alreadyShown) return;
         var element = document.getElementById(ELEMENT_ID);
         if (element) {
           element.style.display = "block";
           alreadyShown = true;
+          console.log("Conteúdo VSL liberado!");
         }
       };
 
-      /* Sincronização direta com o SmartPlayer da VTurb */
-      window.smartplayer.instances[0].on('timeupdate', function(t) {
-        if (t.seconds >= SECONDS_TO_WAIT) {
-          showElement();
+      // 1. Tenta sincronizar com o SmartPlayer da VTurb continuamente
+      var checkVturb = setInterval(function() {
+        if (window.smartplayer && window.smartplayer.instances && window.smartplayer.instances[0]) {
+          window.smartplayer.instances[0].on('timeupdate', function(t) {
+            if (t.seconds >= SECONDS_TO_WAIT) {
+              showElement();
+              clearInterval(checkVturb);
+            }
+          });
         }
-      });
+      }, 1000);
+
+      // 2. Plano B: Cronômetro de segurança (caso a sincronia falhe no mobile)
+      setTimeout(showElement, (SECONDS_TO_WAIT + 10) * 1000); 
     </script>
 </body>
 </html>
