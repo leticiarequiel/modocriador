@@ -1352,24 +1352,27 @@
 
     <!-- Script de Delay do VTurb -->
     <script type="text/javascript">
-     document.addEventListener("DOMContentLoaded", function() {
-       /* CONFIGURAÇÃO DO DELAY */
-       var SECONDS_TO_WAIT = 478; /* 7 min e 58 seg */
-       var ELEMENT_ID = 'vsl-delay';
+      /* CONFIGURAÇÃO DO DELAY VIA VTURB */
+      var SECONDS_TO_WAIT = 478; /* 7 min e 58 seg */
+      var ELEMENT_ID = 'vsl-delay';
 
-       /* Lógica VTurb */
-       var alreadyShown = false;
-       var showElement = function() {
-         if (alreadyShown) return;
-         var element = document.getElementById(ELEMENT_ID);
-         if (element) {
-           element.style.display = "block";
-           alreadyShown = true;
-         }
-       };
+      /* Não altere as linhas abaixo */
+      var alreadyShown = false;
+      var showElement = function() {
+        if (alreadyShown) return;
+        var element = document.getElementById(ELEMENT_ID);
+        if (element) {
+          element.style.display = "block";
+          alreadyShown = true;
+        }
+      };
 
-       setTimeout(showElement, SECONDS_TO_WAIT * 1000);
-     });
+      /* Sincronização direta com o SmartPlayer da VTurb */
+      window.smartplayer.instances[0].on('timeupdate', function(t) {
+        if (t.seconds >= SECONDS_TO_WAIT) {
+          showElement();
+        }
+      });
     </script>
 </body>
 </html>
