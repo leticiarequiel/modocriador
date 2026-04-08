@@ -1,0 +1,66 @@
+.elementor-kit-11{--e-global-color-primary:#2A2A2A;--e-global-color-secondary:#8A847D;--e-global-color-text:#706047;--e-global-color-accent:#D6CDC1;--e-global-color-fb94c08:#F7E6C0;--e-global-color-d8d5934:#E3AE08;--e-global-color-fc95c5b:#EEEEEE;--e-global-color-1ad7140:#494440;--e-global-color-5bf346a:#434240;--e-global-color-bc2a7b4:#FAF9F7;--e-global-color-55e1895:#72645E;--e-global-color-57c6c64:#CBBAB2;--e-global-typography-primary-font-family:"Poppins";--e-global-typography-primary-font-size:40px;--e-global-typography-primary-font-weight:600;--e-global-typography-primary-line-height:1.3em;--e-global-typography-primary-letter-spacing:0px;--e-global-typography-secondary-font-family:"Poppins";--e-global-typography-secondary-font-size:22px;--e-global-typography-secondary-font-weight:400;--e-global-typography-secondary-line-height:1.4em;--e-global-typography-secondary-letter-spacing:0px;--e-global-typography-text-font-family:"Poppins";--e-global-typography-text-font-size:18px;--e-global-typography-text-font-weight:400;--e-global-typography-text-line-height:1.5em;--e-global-typography-text-letter-spacing:0px;--e-global-typography-accent-font-family:"Poppins";--e-global-typography-accent-font-weight:500;--e-global-typography-d079e54-font-family:"Plus Jakarta Sans";--e-global-typography-d079e54-font-size:3em;--e-global-typography-d079e54-font-weight:600;--e-global-typography-79b67f6-font-family:"Plus Jakarta Sans";--e-global-typography-79b67f6-font-size:2.5em;--e-global-typography-79b67f6-font-weight:600;--e-global-typography-a904566-font-family:"Plus Jakarta Sans";--e-global-typography-a904566-font-size:1.125em;--e-global-typography-a904566-font-weight:400;--e-global-typography-57cecec-font-family:"Plus Jakarta Sans";--e-global-typography-57cecec-font-size:1.25em;--e-global-typography-57cecec-font-weight:700;}.elementor-kit-11 e-page-transition{background-color:#FFBC7D;}.elementor-section.elementor-section-boxed > .elementor-container{max-width:1280px;}.e-con{--container-max-width:1280px;--container-default-padding-top:7em;--container-default-padding-right:0em;--container-default-padding-bottom:7em;--container-default-padding-left:0em;}.elementor-widget:not(:last-child){margin-block-end:20px;}.elementor-element{--widgets-spacing:20px 20px;--widgets-spacing-row:20px;--widgets-spacing-column:20px;}{}h1.entry-title{display:var(--page-title-display);}.site-header .site-branding{flex-direction:column;align-items:stretch;}.site-header{padding-inline-end:0px;padding-inline-start:0px;}.site-footer .site-branding{flex-direction:column;align-items:stretch;}@media(max-width:1366px){.e-con{--container-default-padding-top:6em;--container-default-padding-right:1em;--container-default-padding-bottom:6em;--container-default-padding-left:1em;}}@media(max-width:1024px){.elementor-section.elementor-section-boxed > .elementor-container{max-width:90vw;}.e-con{--container-max-width:90vw;--container-default-padding-top:4em;--container-default-padding-right:0em;--container-default-padding-bottom:4em;--container-default-padding-left:0em;}}@media(max-width:767px){.elementor-section.elementor-section-boxed > .elementor-container{max-width:90vw;}.e-con{--container-max-width:90vw;--container-default-padding-top:3em;--container-default-padding-right:1em;--container-default-padding-bottom:3em;--container-default-padding-left:1em;}}/* Start custom CSS */[data-elementor-type="wp-page"]{
+    overflow: hidden;
+}
+html,body{width:100%; overflow-x:hidden!important;}/* End custom CSS */
+/* Start Custom Fonts CSS */@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("Poppins-Regular_e2e2b91330fa.eot");
+	src: url("Poppins-Regular_873591221ea9.eot") format('embedded-opentype'),
+		url("Poppins-Regular_b24ac3ecb9df.woff2") format('woff2'),
+		url("Poppins-Regular_a6c5d5cd79ee.woff") format('woff'),
+		url("Poppins-Regular_c80e251b9182.ttf") format('truetype'),
+		url("Poppins-Regular_fbcf88cd8909.svg") format('svg');
+}
+@font-face {
+	font-family: 'Poppins';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url("Poppins-SemiBold_81baa6340a89.eot");
+	src: url("Poppins-SemiBold_7c5becb6a4fe.eot") format('embedded-opentype'),
+		url("Poppins-SemiBold_046638b6d53c.woff2") format('woff2'),
+		url("Poppins-SemiBold_4b60d3a26081.woff") format('woff'),
+		url("Poppins-SemiBold_ba14a0a248a4.ttf") format('truetype'),
+		url("Poppins-SemiBold_027fb0d18b3e.svg") format('svg');
+}
+/* End Custom Fonts CSS */
+/* Start Custom Fonts CSS */@font-face {
+	font-family: 'Plus Jakarta Sans';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url("PlusJakartaSans-Regular_31574504d592.eot");
+	src: url("PlusJakartaSans-Regular_82e4b68a1d88.eot") format('embedded-opentype'),
+		url("PlusJakartaSans-Regular_7fc098dc03a7.woff2") format('woff2'),
+		url("PlusJakartaSans-Regular_a5ed5504937f.woff") format('woff'),
+		url("PlusJakartaSans-Regular_0084ec914c0b.ttf") format('truetype'),
+		url("PlusJakartaSans-Regular_636c20bbe5b7.svg") format('svg');
+}
+@font-face {
+	font-family: 'Plus Jakarta Sans';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url("PlusJakartaSans-SemiBold_92e5b12b9233.eot");
+	src: url("PlusJakartaSans-SemiBold_2e93a9363b50.eot") format('embedded-opentype'),
+		url("PlusJakartaSans-SemiBold_e67b93d3f4f1.woff2") format('woff2'),
+		url("PlusJakartaSans-SemiBold_fd27afdfeeec.woff") format('woff'),
+		url("PlusJakartaSans-SemiBold_05bfa5d2e23b.ttf") format('truetype'),
+		url("PlusJakartaSans-SemiBold_96da23d08d95.svg") format('svg');
+}
+@font-face {
+	font-family: 'Plus Jakarta Sans';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url("PlusJakartaSans-Bold_0c2fbe8c2c77.eot");
+	src: url("PlusJakartaSans-Bold_2fbf64fe21bc.eot") format('embedded-opentype'),
+		url("PlusJakartaSans-Bold_05b36d402b44.woff2") format('woff2'),
+		url("PlusJakartaSans-Bold_b9d09a6cc787.woff") format('woff'),
+		url("PlusJakartaSans-Bold_1c939a212b92.ttf") format('truetype'),
+		url("PlusJakartaSans-Bold_5dbf66061b31.svg") format('svg');
+}
+/* End Custom Fonts CSS */

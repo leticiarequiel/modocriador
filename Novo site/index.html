@@ -1,0 +1,1340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Modo Criador - Assista antes de comprar qualquer câmera nova</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+    
+    <!-- Iconify -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        neutral: {
+                            850: '#1f1f22',
+                            900: '#111113',
+                            950: '#0a0a0c',
+                        },
+                        green: {
+                            400: '#4FE074',
+                            500: '#36C65B',
+                            600: '#28A748',
+                        },
+                        mzv: {
+                            surface: '#0d0d10',
+                        }
+                    },
+                    boxShadow: {
+                        'glow': '0 0 30px rgba(54, 198, 91, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base styling based on design system */
+        body {
+            background-color: #050505;
+            color: #e2e8f0;
+            overflow-x: hidden;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        /* Animated Grid Background */
+        .bg-grid {
+            background-size: 40px 40px;
+            background-image: linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                              linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+            -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+            mask: radial-gradient(ellipse at center, black 30%, transparent 70%);
+        }
+
+        /* Glass border from design system */
+        .border-gradient {
+            position: relative;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(12px);
+        }
+        .border-gradient::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            padding: 1px;
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.05) 50%, rgba(54, 198, 91, 0.5) 100%);
+            pointer-events: none;
+        }
+
+        /* Glow effects */
+        @keyframes textGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
+            50% { text-shadow: 0 0 40px rgba(255, 255, 255, 0.3); }
+            100% { text-shadow: 0 0 20px rgba(255, 255, 255, 0.1); }
+        }
+        .text-glow { animation: textGlow 4s ease-in-out infinite; }
+        
+        /* Intro Animations */
+        @keyframes fadeSlideIn {
+            0% { opacity: 0; transform: translateY(20px); filter: blur(4px); }
+            100% { opacity: 1; transform: translateY(0); filter: blur(0px); }
+        }
+        .animate-enter { animation: fadeSlideIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        
+        /* Vturb inner container curve fix */
+        vturb-smartplayer {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+    </style>
+</head>
+<body class="min-h-screen relative antialiased selection:bg-green-500/30 selection:text-white flex flex-col">
+
+    <!-- Background Base -->
+    <div class="fixed inset-0 z-0 bg-grid pointer-events-none opacity-40"></div>
+    <div class="fixed inset-0 z-0 bg-gradient-to-br from-black via-[#0a0a0c] to-[#111113] opacity-80 pointer-events-none"></div>
+
+    <main class="relative z-10 flex-grow flex items-center justify-center pt-16 pb-24 px-6 md:px-12">
+        <section class="w-full max-w-5xl mx-auto flex flex-col items-center text-center">
+            
+            <!-- Pre-headline (Mono text style from design system) -->
+            <div class="animate-enter inline-flex items-center gap-2 rounded-full border-gradient px-4 py-2 text-xs md:text-sm font-mono text-neutral-300 mb-6 lg:mb-8 shadow-glow max-w-full">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse shrink-0"></span>
+                <span class="tracking-widest uppercase">Seu conteúdo é bom. Seus vídeos ainda não mostram isso.</span>
+            </div>
+
+            <!-- Headline H1 (Refined size and typography) -->
+            <h1 class="animate-enter delay-100 text-xl sm:text-2xl md:text-3xl lg:text-[2.5rem] leading-[1.1] text-white font-medium tracking-tighter uppercase mb-10 max-w-4xl relative">
+                <!-- Inner glow effect -->
+                <div class="absolute inset-0 bg-white/5 blur-2xl rounded-full pointer-events-none z-[-1]"></div>
+                Assista antes de comprar<br />
+                <span class="text-transparent bg-clip-text bg-gradient-to-br from-green-400 via-green-500 to-green-700 drop-shadow-[0_0_15px_rgba(54,198,91,0.5)]">qualquer câmera nova.</span>
+            </h1>
+
+            <!-- VSL Video Wrapper -->
+            <!-- Mobile first approach: Vturb has a max-width: 400px as requested -->
+            <div class="animate-enter delay-200 w-full flex justify-center relative z-20">
+                <div class="w-full max-w-[420px] sm:max-w-[480px] border-gradient rounded-[14px] p-1.5 bg-black/40 backdrop-blur-md shadow-2xl relative flex flex-col">
+                    <!-- Glow behind video for visual bump -->
+                    <div class="absolute inset-0 bg-green-500/10 blur-[50px] rounded-full pointer-events-none z-[-1]"></div>
+                    
+                    <!-- Exact Player Request -->
+                    <vturb-smartplayer id="vid-69d6754b8727dfad14f07bd9" style="display: block; margin: 0 auto; width: 100%; max-width: 400px; flex-shrink: 0;"></vturb-smartplayer>
+                    
+                    <!-- Call to action audio -->
+                    <div class="w-full flex items-center justify-center gap-2 py-3 mt-1 text-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-green-500 animate-pulse"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"></polygon><path d="M15.54 8.46a5 5 0 0 1 0 7.07"></path><path d="M19.07 4.93a10 10 0 0 1 0 14.14"></path></svg>
+                        <span class="text-[10px] md:text-xs font-mono font-medium tracking-widest text-neutral-300">ATIVE O SOM E ASSISTA ATÉ O FINAL</span>
+                    </div>
+                </div>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- 2) Pain Points Section (Bento Grid) -->
+    <section id="pain-points" class="py-24 px-6 lg:px-12 max-w-[90rem] mx-auto relative z-10 w-full">
+        <!-- Headline -->
+        <div class="mb-16 text-center animate-enter">
+            <h2 class="text-3xl sm:text-4xl lg:text-[4rem] leading-tight text-white font-medium tracking-tight max-w-4xl mx-auto">
+                Seu conteúdo é de elite. <br class="hidden sm:block"/>
+                <span class="text-neutral-500">Por que seus vídeos parecem amadores?</span>
+            </h2>
+        </div>
+
+        <!-- Diagnostic List -->
+        <div class="relative max-w-3xl mx-auto mb-16 px-4 sm:px-0">
+            <!-- Vertical Beam -->
+            <div class="absolute left-[40px] sm:left-[24px] top-8 bottom-[40px] w-[1px] bg-gradient-to-b from-orange-500/30 via-white/10 to-green-500/50 z-0"></div>
+
+            <div class="space-y-4 sm:space-y-6">
+                <!-- Item 1 -->
+                <div class="animate-enter delay-100 group relative flex items-center gap-4 sm:gap-6">
+                    <div class="relative z-10 w-12 h-12 rounded-full bg-[#050505] border border-white/10 flex items-center justify-center text-orange-500/70 group-hover:text-green-500 group-hover:border-green-500/40 group-hover:bg-green-500/10 hover:shadow-glow transition-all duration-300 shrink-0 shadow-lg">
+                        <iconify-icon icon="solar:close-circle-bold-duotone" width="24" class="block group-hover:hidden transition-transform"></iconify-icon>
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="hidden group-hover:block transition-transform scale-110"></iconify-icon>
+                    </div>
+                    <div class="relative flex-grow p-6 sm:p-8 rounded-2xl bg-[#0a0a0c] border border-white/5 transition-all duration-300 hover:border-transparent">
+                        <div class="absolute inset-0 rounded-2xl border-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10 block">
+                            <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-widest block mb-1 transition-colors group-hover:text-green-500/70">O Ciclo da Procrastinação</span>
+                            <p class="text-base sm:text-lg text-neutral-300 font-light leading-relaxed">
+                                Você prepara tudo, mas desiste de postar porque o vídeo parece <strong class="font-semibold text-green-400">"barato"</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="animate-enter delay-200 group relative flex items-center gap-4 sm:gap-6">
+                    <div class="relative z-10 w-12 h-12 rounded-full bg-[#050505] border border-white/10 flex items-center justify-center text-orange-500/70 group-hover:text-green-500 group-hover:border-green-500/40 group-hover:bg-green-500/10 hover:shadow-glow transition-all duration-300 shrink-0 shadow-lg">
+                        <iconify-icon icon="solar:close-circle-bold-duotone" width="24" class="block group-hover:hidden transition-transform"></iconify-icon>
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="hidden group-hover:block transition-transform scale-110"></iconify-icon>
+                    </div>
+                    <div class="relative flex-grow p-6 sm:p-8 rounded-2xl bg-[#0a0a0c] border border-white/5 transition-all duration-300 hover:border-transparent">
+                        <div class="absolute inset-0 rounded-2xl border-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10 block">
+                            <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-widest block mb-1 transition-colors group-hover:text-green-500/70">A Ilusão do Equipamento</span>
+                            <p class="text-base sm:text-lg text-neutral-300 font-light leading-relaxed">
+                                Você gasta horas pesquisando novas opções de câmeras e celulares, achando que <strong class="font-semibold text-green-400">o problema é o seu equipamento atual</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="animate-enter delay-300 group relative flex items-center gap-4 sm:gap-6">
+                    <div class="relative z-10 w-12 h-12 rounded-full bg-[#050505] border border-white/10 flex items-center justify-center text-orange-500/70 group-hover:text-green-500 group-hover:border-green-500/40 group-hover:bg-green-500/10 hover:shadow-glow transition-all duration-300 shrink-0 shadow-lg">
+                        <iconify-icon icon="solar:close-circle-bold-duotone" width="24" class="block group-hover:hidden transition-transform"></iconify-icon>
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="hidden group-hover:block transition-transform scale-110"></iconify-icon>
+                    </div>
+                    <div class="relative flex-grow p-6 sm:p-8 rounded-2xl bg-[#0a0a0c] border border-white/5 transition-all duration-300 hover:border-transparent">
+                        <div class="absolute inset-0 rounded-2xl border-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10 block">
+                            <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-widest block mb-1 transition-colors group-hover:text-green-500/70">O Som que Afasta</span>
+                            <p class="text-base sm:text-lg text-neutral-300 font-light leading-relaxed">
+                                Seu conteúdo é rico, mas o áudio amador faz as pessoas <strong class="font-semibold text-green-400">saírem do vídeo nos primeiros 5 segundos</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="animate-enter delay-100 group relative flex items-center gap-4 sm:gap-6">
+                    <div class="relative z-10 w-12 h-12 rounded-full bg-[#050505] border border-white/10 flex items-center justify-center text-orange-500/70 group-hover:text-green-500 group-hover:border-green-500/40 group-hover:bg-green-500/10 hover:shadow-glow transition-all duration-300 shrink-0 shadow-lg">
+                        <iconify-icon icon="solar:close-circle-bold-duotone" width="24" class="block group-hover:hidden transition-transform"></iconify-icon>
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="hidden group-hover:block transition-transform scale-110"></iconify-icon>
+                    </div>
+                    <div class="relative flex-grow p-6 sm:p-8 rounded-2xl bg-[#0a0a0c] border border-white/5 transition-all duration-300 hover:border-transparent">
+                        <div class="absolute inset-0 rounded-2xl border-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10 block">
+                            <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-widest block mb-1 transition-colors group-hover:text-green-500/70">Autoridade Invisível</span>
+                            <p class="text-base sm:text-lg text-neutral-300 font-light leading-relaxed">
+                                Você é autoridade no offline, mas no digital parece <strong class="font-semibold text-green-400">um iniciante tentando a sorte</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="animate-enter delay-200 group relative flex items-center gap-4 sm:gap-6">
+                    <div class="relative z-10 w-12 h-12 rounded-full bg-[#050505] border border-white/10 flex items-center justify-center text-orange-500/70 group-hover:text-green-500 group-hover:border-green-500/40 group-hover:bg-green-500/10 hover:shadow-glow transition-all duration-300 shrink-0 shadow-lg">
+                        <iconify-icon icon="solar:close-circle-bold-duotone" width="24" class="block group-hover:hidden transition-transform"></iconify-icon>
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="hidden group-hover:block transition-transform scale-110"></iconify-icon>
+                    </div>
+                    <div class="relative flex-grow p-6 sm:p-8 rounded-2xl bg-[#0a0a0c] border border-white/5 transition-all duration-300 hover:border-transparent">
+                        <div class="absolute inset-0 rounded-2xl border-gradient opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"></div>
+                        <div class="relative z-10 block">
+                            <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-widest block mb-1 transition-colors group-hover:text-green-500/70">A Comparação Injusta</span>
+                            <p class="text-base sm:text-lg text-neutral-300 font-light leading-relaxed">
+                                Ver seu concorrente crescer com um conteúdo pior, só porque <strong class="font-semibold text-green-400">a imagem dele "vende" mais que a sua</strong>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Callout Element (acting as conclusion of the list) -->
+                <div class="animate-enter delay-300 group relative flex items-center gap-4 sm:gap-6 pt-4">
+                    <div class="relative z-10 w-12 h-12 rounded-full bg-green-500 flex items-center justify-center text-white shadow-glow shrink-0">
+                        <iconify-icon icon="solar:info-circle-bold" width="24"></iconify-icon>
+                    </div>
+                    <div class="relative flex-grow p-6 sm:p-8 rounded-2xl bg-green-500/5 border border-green-500/20 overflow-hidden shadow-[inset_0_0_20px_rgba(54,198,91,0.05)]">
+                        <p class="relative z-10 text-white text-base md:text-xl font-medium tracking-tight">
+                            O problema não é você, nem seu equipamento. É a falta de fundamento.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Solid Bright Button (High Conversion) -->
+            <div class="flex justify-center mt-20 sm:pl-[72px]">
+                <button class="w-full sm:w-auto text-white tracking-wide bg-[#36C65B] px-10 py-5 rounded-full text-base font-semibold shadow-[0_0_30px_rgba(54,198,91,0.5)] transition-all duration-300 hover:scale-105 hover:bg-[#2eaa51] hover:shadow-[0_0_50px_rgba(54,198,91,0.8)]">
+                    Quero ativar o modo criador
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3) Unique Mechanism (Comparison Section) -->
+    <section id="mechanism" class="py-24 px-6 lg:px-12 max-w-[90rem] mx-auto relative z-10 w-full">
+        <!-- Headline -->
+        <div class="mb-20 text-center animate-enter">
+            <h2 class="text-4xl lg:text-6xl leading-tight text-white font-medium tracking-tight max-w-5xl mx-auto uppercase">
+                Conhecimento vale mais que <span class="text-transparent bg-clip-text bg-gradient-to-r from-neutral-400 to-neutral-600">equipamento.</span> Eu te provo.
+            </h2>
+        </div>
+
+        <!-- Comparison Tech Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12 max-w-6xl mx-auto relative">
+            
+            <!-- VS Badge (Absolute Center on Desktop) -->
+            <div class="hidden md:flex absolute top-[140px] left-1/2 -translate-x-1/2 z-30 w-12 h-12 rounded-full bg-[#050505] border border-white/10 items-center justify-center shadow-2xl">
+                <span class="text-xs font-mono text-neutral-500 font-bold uppercase">VS</span>
+            </div>
+
+            <!-- Column 1: The Expensive Setup -->
+            <div class="animate-enter delay-100 flex flex-col items-center">
+                <div class="w-full bg-[#0a0a0c] border border-white/5 rounded-3xl p-4 sm:p-6 transition-colors hover:border-white/10 group">
+                    <!-- Top Badge (Optional but good for CRO) -->
+                    <div class="flex items-center gap-2 mb-4 px-2">
+                        <iconify-icon icon="solar:wad-of-money-bold-duotone" width="20" class="text-red-500/70"></iconify-icon>
+                        <span class="text-[10px] font-mono text-red-400/70 uppercase tracking-widest">A Ilusão</span>
+                    </div>
+
+                    <!-- Video: A Ilusão -->
+                    <div class="w-full aspect-video bg-neutral-900 rounded-xl relative overflow-hidden">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            preload="metadata"
+                            style="width:100%; height:100%; object-fit:cover; display:block; pointer-events:none;"
+                        >
+                            <source src="assets/Antes2.webm" type="video/webm">
+                            <source src="assets/Antes2.mp4" type="video/mp4">
+                        </video>
+                        <!-- Subtle red overlay to reinforce the "ilusão" mood -->
+                        <div class="absolute inset-0 bg-gradient-to-br from-red-500/10 to-transparent pointer-events-none"></div>
+                    </div>
+                </div>
+                <!-- Text Below -->
+                <p class="text-neutral-400 text-base md:text-lg font-light leading-relaxed text-center mt-6 max-w-md px-4">
+                    Foco no Equipamento: <strong class="text-white font-medium">investimento alto</strong>, mas sem domínio dos fundamentos básicos.
+                </p>
+            </div>
+
+            <!-- Column 2: The Smart Setup (Hero) -->
+            <div class="animate-enter delay-200 flex flex-col items-center relative">
+                <!-- Highlight Glow Behind -->
+                <div class="absolute inset-0 bg-green-500/5 blur-3xl rounded-[3rem] pointer-events-none -z-10"></div>
+                
+                <div class="w-full border-gradient shadow-glow rounded-3xl p-4 sm:p-6 border-green-500/30 group">
+                    <!-- Top Badge -->
+                    <div class="flex items-center gap-2 mb-4 px-2">
+                        <iconify-icon icon="solar:videocamera-record-bold-duotone" width="20" class="text-green-500 animate-pulse"></iconify-icon>
+                        <span class="text-[10px] font-mono text-green-400 uppercase tracking-widest block">O Método</span>
+                    </div>
+
+                    <!-- Video: O Método -->
+                    <div class="w-full aspect-video bg-[#050505] border border-green-500/30 rounded-xl relative overflow-hidden group-hover:border-green-500/50 transition-colors shadow-[inset_0_0_30px_rgba(54,198,91,0.05)]">
+                        <video
+                            autoplay
+                            loop
+                            muted
+                            playsinline
+                            preload="metadata"
+                            style="width:100%; height:100%; object-fit:cover; display:block; pointer-events:none;"
+                        >
+                            <source src="assets/depois.webm" type="video/webm">
+                            <source src="assets/depois.mp4" type="video/mp4">
+                        </video>
+                        <!-- Subtle green overlay to reinforce the "método" mood -->
+                        <div class="absolute inset-0 bg-gradient-to-tr from-green-500/10 to-transparent pointer-events-none"></div>
+                    </div>
+                </div>
+                <!-- Text Below -->
+                <p class="text-neutral-300 text-base md:text-lg font-light leading-relaxed text-center mt-6 max-w-md px-4">
+                    Foco na Técnica: <strong class="text-green-400 font-semibold">configurações certas</strong> com o método Modo Criador.
+                </p>
+            </div>
+
+        </div>
+
+        <!-- Conclusion Badge -->
+        <div class="mt-16 sm:mt-24 flex justify-center animate-enter delay-300">
+            <div class="inline-flex items-center gap-4 bg-[#0a0a0c] border border-white/10 px-6 py-3 rounded-full shadow-lg">
+                <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse hidden sm:block"></span>
+                <span class="text-sm md:text-base font-mono font-medium text-white tracking-widest uppercase">
+                    TÉCNICA <span class="text-green-500 mx-2">&gt;</span> EQUIPAMENTO
+                </span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4) Instructor Bio (Quem vai te guiar) -->
+    <section id="instructor" class="py-24 px-6 lg:px-12 max-w-[90rem] mx-auto relative z-10 w-full overflow-hidden">
+        <!-- Background Glow (behind photo silhouette) -->
+        <div class="absolute top-1/2 left-1/4 -translate-y-1/2 -translate-x-1/2 w-[900px] h-[900px] bg-[#36C65B] rounded-full filter blur-[200px] pointer-events-none z-0" style="opacity: 0.05;"></div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-8 max-w-7xl mx-auto items-center relative z-10">
+            
+            <!-- Left Column: Photo — pure alpha masking, ZERO overlays -->
+            <div class="relative w-full mx-auto lg:mx-0 instructor-photo-wrapper" style="overflow: visible; animation: organicFadeIn 1.5s ease-out forwards;">
+                
+                <img 
+                    src="assets/quem e rodrigo.webp" 
+                    alt="Rodrigo Baião" 
+                    class="relative w-full lg:w-[110%] aspect-[3/4] lg:-ml-[5%] object-cover object-top opacity-90"
+                    style="
+                        -webkit-mask-image: radial-gradient(ellipse at 50% 40%, black 40%, transparent 75%);
+                        mask-image: radial-gradient(ellipse at 50% 40%, black 40%, transparent 75%);
+                        filter: contrast(1.05) saturate(1.1);
+                    "
+                />
+
+            </div>
+
+            <!-- Right Column: Bio Copy -->
+            <div class="flex flex-col justify-center animate-enter delay-200 lg:pl-12">
+                <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-widest block mb-4">Quem vai te guiar</span>
+                
+                <h3 class="text-4xl sm:text-5xl lg:text-[4rem] text-white font-medium tracking-tight mb-2">Rodrigo Baião</h3>
+                <p class="text-lg sm:text-xl font-mono text-green-500 tracking-widest uppercase mb-10">Criador de conteúdo e Filmmaker</p>
+                
+                <div class="space-y-6 text-neutral-400 font-light text-base sm:text-lg leading-relaxed max-w-2xl">
+                    <p>
+                        Depois de anos de produções, percebi um padrão que separava os produtores de conteúdo de elite dos amadores. E não tinha nada a ver com o preço da câmera.
+                    </p>
+                    <p>
+                        A verdadeira diferença sempre esteve no domínio do ambiente. Foi por isso que criei o Modo Criador: um método <span class="text-white font-medium italic drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">focado nos 20% de técnica que geram 80% do resultado</span> visual.
+                    </p>
+                    <p>
+                        Minha missão agora é transformar você na sua própria produtora. Sem estúdios caros, sem equipes complexas. Apenas você, seu conhecimento e uma estética que vende sua autoridade antes mesmo de você abrir a boca.
+                    </p>
+                </div>
+                
+                <!-- Trust Badges -->
+                <div class="mt-12 flex items-center gap-6">
+                    <div class="flex items-center gap-2">
+                        <iconify-icon icon="solar:users-group-two-rounded-bold-duotone" width="24" class="text-neutral-600"></iconify-icon>
+                        <span class="text-xs font-mono text-neutral-500 uppercase">+ de 3600 alunos</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- 5) Modules Section — Interactive Dashboard -->
+    <section id="modules" class="py-24 px-6 lg:px-12 max-w-[90rem] mx-auto relative z-10 w-full">
+        <!-- Headline -->
+        <div class="mb-20 text-center animate-enter">
+            <span class="text-[10px] font-mono text-neutral-500 uppercase tracking-widest block mb-4">Conteúdo do Curso</span>
+            <h2 class="text-4xl lg:text-6xl leading-tight text-white font-medium tracking-tight max-w-5xl mx-auto uppercase">
+                O que você vai <span class="text-[#36C65B]">dominar</span>
+            </h2>
+        </div>
+
+        <!-- Modules Grid (4 cols desktop, 2 cols tablet, 1 col mobile) -->
+        <div class="grid grid-cols-1 gap-3 max-w-3xl mx-auto" id="modules-grid">
+            
+            <!-- Module 01 -->
+            <details class="module-card group rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer" data-module="1"
+                style="background: linear-gradient(135deg, #0d0d10 0%, #111113 100%); border: 1px solid rgba(255,255,255,0.06);">
+                <summary class="module-summary select-none list-none outline-none focus:outline-none relative overflow-hidden" style="padding: 0;">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style="background: linear-gradient(135deg, rgba(54,198,91,0.06) 0%, transparent 60%);"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="flex items-center gap-4 px-6 py-5 relative z-10">
+                        <span class="text-[3rem] font-mono font-black leading-none select-none shrink-0 w-14 text-center"
+                            style="color: rgba(54,198,91,0.13); letter-spacing: -3px;">01</span>
+                        <div class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">
+                            <iconify-icon icon="solar:bolt-circle-bold-duotone" width="26" class="text-[#36C65B]"></iconify-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-mono text-neutral-600 uppercase tracking-widest block mb-0.5">Módulo 01</span>
+                            <h3 class="text-sm sm:text-base font-semibold text-white leading-snug group-hover:text-[#4FE074] transition-colors duration-300">Fundamentos Essenciais</h3>
+                            <p class="text-xs text-neutral-500 font-light mt-1 leading-relaxed hidden sm:block">Tripé da Qualidade — Luz, Imagem e Áudio.</p>
+                        </div>
+                        <div class="shrink-0 flex flex-col items-end gap-2">
+                            <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full hidden md:block"
+                                style="color: #36C65B; background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">Fundamento</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-neutral-500 module-arrow transition-transform duration-300"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style="background: linear-gradient(to right, transparent, rgba(54,198,91,0.35), transparent);"></div>
+                </summary>
+                <div class="module-content px-6 pb-5 pt-0 border-t" style="border-color: rgba(255,255,255,0.05);">
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                        <p class="flex-1 text-neutral-400 font-light leading-relaxed text-sm">Antes de qualquer configuração, você precisa virar uma chave mental. Aqui você entende o Tripé da Qualidade — Luz, Imagem e Áudio — e por que o equipamento que você já tem é mais do que suficiente.</p>
+                        <div class="shrink-0 sm:w-44 rounded-xl p-3 flex flex-col gap-1" style="background: rgba(54,198,91,0.05); border: 1px solid rgba(54,198,91,0.15);">
+                            <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest">Resultado</span>
+                            <p class="text-white text-xs font-medium leading-snug">Você sai sabendo exatamente o que faz um vídeo funcionar.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Module 02 -->
+            <details class="module-card group rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer" data-module="2"
+                style="background: linear-gradient(135deg, #0d0d10 0%, #111113 100%); border: 1px solid rgba(255,255,255,0.06);">
+                <summary class="module-summary select-none list-none outline-none focus:outline-none relative overflow-hidden" style="padding: 0;">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style="background: linear-gradient(135deg, rgba(54,198,91,0.06) 0%, transparent 60%);"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="flex items-center gap-4 px-6 py-5 relative z-10">
+                        <span class="text-[3rem] font-mono font-black leading-none select-none shrink-0 w-14 text-center"
+                            style="color: rgba(54,198,91,0.13); letter-spacing: -3px;">02</span>
+                        <div class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">
+                            <iconify-icon icon="solar:sun-2-bold-duotone" width="26" class="text-[#36C65B]"></iconify-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-mono text-neutral-600 uppercase tracking-widest block mb-0.5">Módulo 02</span>
+                            <h3 class="text-sm sm:text-base font-semibold text-white leading-snug group-hover:text-[#4FE074] transition-colors duration-300">Dando uma Luz</h3>
+                            <p class="text-xs text-neutral-500 font-light mt-1 leading-relaxed hidden sm:block">Luz natural, temperatura de cor e iluminação profissional gastando pouco.</p>
+                        </div>
+                        <div class="shrink-0 flex flex-col items-end gap-2">
+                            <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full hidden md:block"
+                                style="color: #36C65B; background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">Iluminação</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-neutral-500 module-arrow transition-transform duration-300"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style="background: linear-gradient(to right, transparent, rgba(54,198,91,0.35), transparent);"></div>
+                </summary>
+                <div class="module-content px-6 pb-5 pt-0 border-t" style="border-color: rgba(255,255,255,0.05);">
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                        <p class="flex-1 text-neutral-400 font-light leading-relaxed text-sm">A luz molda o rosto, define o clima e entrega ou destrói a autoridade de um vídeo. Você aprende a usar a luz natural a seu favor, domina temperatura de cor e monta esquemas de iluminação profissionais gastando pouco.</p>
+                        <div class="shrink-0 sm:w-44 rounded-xl p-3 flex flex-col gap-1" style="background: rgba(54,198,91,0.05); border: 1px solid rgba(54,198,91,0.15);">
+                            <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest">Resultado</span>
+                            <p class="text-white text-xs font-medium leading-snug">Fim das sombras no rosto e da imagem lavada.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Module 03 -->
+            <details class="module-card group rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer" data-module="3"
+                style="background: linear-gradient(135deg, #0d0d10 0%, #111113 100%); border: 1px solid rgba(255,255,255,0.06);">
+                <summary class="module-summary select-none list-none outline-none focus:outline-none relative overflow-hidden" style="padding: 0;">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style="background: linear-gradient(135deg, rgba(54,198,91,0.06) 0%, transparent 60%);"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="flex items-center gap-4 px-6 py-5 relative z-10">
+                        <span class="text-[3rem] font-mono font-black leading-none select-none shrink-0 w-14 text-center"
+                            style="color: rgba(54,198,91,0.13); letter-spacing: -3px;">03</span>
+                        <div class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">
+                            <iconify-icon icon="solar:camera-bold-duotone" width="26" class="text-[#36C65B]"></iconify-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-mono text-neutral-600 uppercase tracking-widest block mb-0.5">Módulo 03</span>
+                            <h3 class="text-sm sm:text-base font-semibold text-white leading-snug group-hover:text-[#4FE074] transition-colors duration-300">O Segredo da Imagem</h3>
+                            <p class="text-xs text-neutral-500 font-light mt-1 leading-relaxed hidden sm:block">ISO, Abertura, Velocidade — Triângulo de Exposição desmistificado.</p>
+                        </div>
+                        <div class="shrink-0 flex flex-col items-end gap-2">
+                            <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full hidden md:block"
+                                style="color: #36C65B; background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">Imagem</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-neutral-500 module-arrow transition-transform duration-300"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style="background: linear-gradient(to right, transparent, rgba(54,198,91,0.35), transparent);"></div>
+                </summary>
+                <div class="module-content px-6 pb-5 pt-0 border-t" style="border-color: rgba(255,255,255,0.05);">
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                        <p class="flex-1 text-neutral-400 font-light leading-relaxed text-sm">ISO, Abertura, Velocidade — o Triângulo de Exposição desmistificado de vez. Mais Regra dos Terços, cenário que vende autoridade, e a verdade sobre 4K vs 1080p e FPS.</p>
+                        <div class="shrink-0 sm:w-44 rounded-xl p-3 flex flex-col gap-1" style="background: rgba(54,198,91,0.05); border: 1px solid rgba(54,198,91,0.15);">
+                            <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest">Resultado</span>
+                            <p class="text-white text-xs font-medium leading-snug">Você nunca mais vai depender do modo automático.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Module 04 -->
+            <details class="module-card group rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer" data-module="4"
+                style="background: linear-gradient(135deg, #0d0d10 0%, #111113 100%); border: 1px solid rgba(255,255,255,0.06);">
+                <summary class="module-summary select-none list-none outline-none focus:outline-none relative overflow-hidden" style="padding: 0;">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style="background: linear-gradient(135deg, rgba(54,198,91,0.06) 0%, transparent 60%);"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="flex items-center gap-4 px-6 py-5 relative z-10">
+                        <span class="text-[3rem] font-mono font-black leading-none select-none shrink-0 w-14 text-center"
+                            style="color: rgba(54,198,91,0.13); letter-spacing: -3px;">04</span>
+                        <div class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">
+                            <iconify-icon icon="solar:smartphone-2-bold-duotone" width="26" class="text-[#36C65B]"></iconify-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-mono text-neutral-600 uppercase tracking-widest block mb-0.5">Módulo 04</span>
+                            <h3 class="text-sm sm:text-base font-semibold text-white leading-snug group-hover:text-[#4FE074] transition-colors duration-300">Desbloqueando o iPhone</h3>
+                            <p class="text-xs text-neutral-500 font-light mt-1 leading-relaxed hidden sm:block">Lente certa, FPS travado e o máximo da câmera nativa e Modo Pro.</p>
+                        </div>
+                        <div class="shrink-0 flex flex-col items-end gap-2">
+                            <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full hidden md:block"
+                                style="color: #36C65B; background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">iPhone</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-neutral-500 module-arrow transition-transform duration-300"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style="background: linear-gradient(to right, transparent, rgba(54,198,91,0.35), transparent);"></div>
+                </summary>
+                <div class="module-content px-6 pb-5 pt-0 border-t" style="border-color: rgba(255,255,255,0.05);">
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                        <p class="flex-1 text-neutral-400 font-light leading-relaxed text-sm">Seu iPhone é uma câmera profissional que você ainda não aprendeu a usar. Descubra qual lente usar, como travar FPS e resolução e como extrair o máximo da câmera nativa e do Modo Pro.</p>
+                        <div class="shrink-0 sm:w-44 rounded-xl p-3 flex flex-col gap-1" style="background: rgba(54,198,91,0.05); border: 1px solid rgba(54,198,91,0.15);">
+                            <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest">Resultado</span>
+                            <p class="text-white text-xs font-medium leading-snug">O celular que você tem no bolso já é suficiente.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Module 05 -->
+            <details class="module-card group rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer" data-module="5"
+                style="background: linear-gradient(135deg, #0d0d10 0%, #111113 100%); border: 1px solid rgba(255,255,255,0.06);">
+                <summary class="module-summary select-none list-none outline-none focus:outline-none relative overflow-hidden" style="padding: 0;">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style="background: linear-gradient(135deg, rgba(54,198,91,0.06) 0%, transparent 60%);"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="flex items-center gap-4 px-6 py-5 relative z-10">
+                        <span class="text-[3rem] font-mono font-black leading-none select-none shrink-0 w-14 text-center"
+                            style="color: rgba(54,198,91,0.13); letter-spacing: -3px;">05</span>
+                        <div class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">
+                            <iconify-icon icon="solar:smartphone-update-bold-duotone" width="26" class="text-[#36C65B]"></iconify-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-mono text-neutral-600 uppercase tracking-widest block mb-0.5">Módulo 05</span>
+                            <h3 class="text-sm sm:text-base font-semibold text-white leading-snug group-hover:text-[#4FE074] transition-colors duration-300">Desbloqueando o Android</h3>
+                            <p class="text-xs text-neutral-500 font-light mt-1 leading-relaxed hidden sm:block">Lente certa, Modo Pro nativo e como eliminar o flicker.</p>
+                        </div>
+                        <div class="shrink-0 flex flex-col items-end gap-2">
+                            <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full hidden md:block"
+                                style="color: #36C65B; background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">Android</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-neutral-500 module-arrow transition-transform duration-300"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style="background: linear-gradient(to right, transparent, rgba(54,198,91,0.35), transparent);"></div>
+                </summary>
+                <div class="module-content px-6 pb-5 pt-0 border-t" style="border-color: rgba(255,255,255,0.05);">
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                        <p class="flex-1 text-neutral-400 font-light leading-relaxed text-sm">Domínio completo do ecossistema Android: como identificar a lente certa, fugir do desfoque digital falso, dominar o Modo Pro nativo e eliminar o flicker (listras pretas).</p>
+                        <div class="shrink-0 sm:w-44 rounded-xl p-3 flex flex-col gap-1" style="background: rgba(54,198,91,0.05); border: 1px solid rgba(54,198,91,0.15);">
+                            <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest">Resultado</span>
+                            <p class="text-white text-xs font-medium leading-snug">Conheça os segredos do seu modelo específico.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Module 06 -->
+            <details class="module-card group rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer" data-module="6"
+                style="background: linear-gradient(135deg, #0d0d10 0%, #111113 100%); border: 1px solid rgba(255,255,255,0.06);">
+                <summary class="module-summary select-none list-none outline-none focus:outline-none relative overflow-hidden" style="padding: 0;">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style="background: linear-gradient(135deg, rgba(54,198,91,0.06) 0%, transparent 60%);"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="flex items-center gap-4 px-6 py-5 relative z-10">
+                        <span class="text-[3rem] font-mono font-black leading-none select-none shrink-0 w-14 text-center"
+                            style="color: rgba(54,198,91,0.13); letter-spacing: -3px;">06</span>
+                        <div class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">
+                            <iconify-icon icon="solar:videocamera-record-bold-duotone" width="26" class="text-[#36C65B]"></iconify-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-mono text-neutral-600 uppercase tracking-widest block mb-0.5">Módulo 06</span>
+                            <h3 class="text-sm sm:text-base font-semibold text-white leading-snug group-hover:text-[#4FE074] transition-colors duration-300">Osmo Pocket 3</h3>
+                            <p class="text-xs text-neutral-500 font-light mt-1 leading-relaxed hidden sm:block">FPS para vlogs fluidos, perfis de cor (Log) e foco automático.</p>
+                        </div>
+                        <div class="shrink-0 flex flex-col items-end gap-2">
+                            <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full hidden md:block"
+                                style="color: #36C65B; background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">Câmera</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-neutral-500 module-arrow transition-transform duration-300"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style="background: linear-gradient(to right, transparent, rgba(54,198,91,0.35), transparent);"></div>
+                </summary>
+                <div class="module-content px-6 pb-5 pt-0 border-t" style="border-color: rgba(255,255,255,0.05);">
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                        <p class="flex-1 text-neutral-400 font-light leading-relaxed text-sm">Para quem tem câmera dedicada. Aprenda a extrair o máximo do sensor, configurar FPS para vlogs fluidos, usar perfis de cor (Log) e dominar o foco automático.</p>
+                        <div class="shrink-0 sm:w-44 rounded-xl p-3 flex flex-col gap-1" style="background: rgba(54,198,91,0.05); border: 1px solid rgba(54,198,91,0.15);">
+                            <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest">Resultado</span>
+                            <p class="text-white text-xs font-medium leading-snug">Sensor maior só vale quando você sabe usar.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Module 07 -->
+            <details class="module-card group rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer" data-module="7"
+                style="background: linear-gradient(135deg, #0d0d10 0%, #111113 100%); border: 1px solid rgba(255,255,255,0.06);">
+                <summary class="module-summary select-none list-none outline-none focus:outline-none relative overflow-hidden" style="padding: 0;">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style="background: linear-gradient(135deg, rgba(54,198,91,0.06) 0%, transparent 60%);"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="flex items-center gap-4 px-6 py-5 relative z-10">
+                        <span class="text-[3rem] font-mono font-black leading-none select-none shrink-0 w-14 text-center"
+                            style="color: rgba(54,198,91,0.13); letter-spacing: -3px;">07</span>
+                        <div class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">
+                            <iconify-icon icon="solar:microphone-large-bold-duotone" width="26" class="text-[#36C65B]"></iconify-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-mono text-neutral-600 uppercase tracking-widest block mb-0.5">Módulo 07</span>
+                            <h3 class="text-sm sm:text-base font-semibold text-white leading-snug group-hover:text-[#4FE074] transition-colors duration-300">Ouça Direito</h3>
+                            <p class="text-xs text-neutral-500 font-light mt-1 leading-relaxed hidden sm:block">Microfones acessíveis, posicionamento e eliminação de erros de áudio.</p>
+                        </div>
+                        <div class="shrink-0 flex flex-col items-end gap-2">
+                            <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full hidden md:block"
+                                style="color: #36C65B; background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">Áudio</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-neutral-500 module-arrow transition-transform duration-300"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style="background: linear-gradient(to right, transparent, rgba(54,198,91,0.35), transparent);"></div>
+                </summary>
+                <div class="module-content px-6 pb-5 pt-0 border-t" style="border-color: rgba(255,255,255,0.05);">
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                        <p class="flex-1 text-neutral-400 font-light leading-relaxed text-sm">Um áudio ruim derruba o vídeo mais bonito. Descubra os melhores microfones acessíveis, posicionamento correto e como eliminar erros que destroem a retenção.</p>
+                        <div class="shrink-0 sm:w-44 rounded-xl p-3 flex flex-col gap-1" style="background: rgba(54,198,91,0.05); border: 1px solid rgba(54,198,91,0.15);">
+                            <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest">Resultado</span>
+                            <p class="text-white text-xs font-medium leading-snug">Áudio limpo não é luxo, é o mínimo.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Module 08 -->
+            <details class="module-card group rounded-2xl overflow-hidden transition-all duration-500 cursor-pointer" data-module="8"
+                style="background: linear-gradient(135deg, #0d0d10 0%, #111113 100%); border: 1px solid rgba(255,255,255,0.06);">
+                <summary class="module-summary select-none list-none outline-none focus:outline-none relative overflow-hidden" style="padding: 0;">
+                    <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                        style="background: linear-gradient(135deg, rgba(54,198,91,0.06) 0%, transparent 60%);"></div>
+                    <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+                    <div class="flex items-center gap-4 px-6 py-5 relative z-10">
+                        <span class="text-[3rem] font-mono font-black leading-none select-none shrink-0 w-14 text-center"
+                            style="color: rgba(54,198,91,0.13); letter-spacing: -3px;">08</span>
+                        <div class="shrink-0 w-11 h-11 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">
+                            <iconify-icon icon="solar:magic-stick-3-bold-duotone" width="26" class="text-[#36C65B]"></iconify-icon>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[9px] font-mono text-neutral-600 uppercase tracking-widest block mb-0.5">Módulo 08</span>
+                            <h3 class="text-sm sm:text-base font-semibold text-white leading-snug group-hover:text-[#4FE074] transition-colors duration-300">Editando do Jeito Certo</h3>
+                            <p class="text-xs text-neutral-500 font-light mt-1 leading-relaxed hidden sm:block">CapCut ou DaVinci — Exportação Anti-Compressão para Reels e YouTube.</p>
+                        </div>
+                        <div class="shrink-0 flex flex-col items-end gap-2">
+                            <span class="text-[9px] font-mono uppercase tracking-wider px-2 py-0.5 rounded-full hidden md:block"
+                                style="color: #36C65B; background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">Edição</span>
+                            <iconify-icon icon="solar:alt-arrow-down-linear" width="16" class="text-neutral-500 module-arrow transition-transform duration-300"></iconify-icon>
+                        </div>
+                    </div>
+                    <div class="h-px w-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                        style="background: linear-gradient(to right, transparent, rgba(54,198,91,0.35), transparent);"></div>
+                </summary>
+                <div class="module-content px-6 pb-5 pt-0 border-t" style="border-color: rgba(255,255,255,0.05);">
+                    <div class="pt-4 flex flex-col sm:flex-row gap-4">
+                        <p class="flex-1 text-neutral-400 font-light leading-relaxed text-sm">Edição dinâmica no CapCut ou DaVinci Resolve. Aprenda o segredo da Exportação Anti-Compressão para postar no Instagram e YouTube sem perder qualidade.</p>
+                        <div class="shrink-0 sm:w-44 rounded-xl p-3 flex flex-col gap-1" style="background: rgba(54,198,91,0.05); border: 1px solid rgba(54,198,91,0.15);">
+                            <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest">Resultado</span>
+                            <p class="text-white text-xs font-medium leading-snug">Vídeo publicado do jeito certo, de uma vez.</p>
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+        </div>
+
+        <!-- CTA Button (Green Glow) -->
+        <div class="flex justify-center mt-20 animate-enter delay-300">
+            <button class="w-full sm:w-auto text-white tracking-wide bg-[#36C65B] px-10 py-5 rounded-full text-base font-semibold shadow-[0_0_30px_rgba(54,198,91,0.5)] transition-all duration-300 hover:scale-105 hover:bg-[#2eaa51] hover:shadow-[0_0_50px_rgba(54,198,91,0.8)]">
+                Quero garantir meu acesso agora
+            </button>
+        </div>
+    </section>
+
+    <!-- ===== BÔNUS EXCLUSIVOS ===== -->
+    <section id="bonus" class="relative py-28 px-6 lg:px-12 overflow-hidden">
+
+        <!-- Background accent glow -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[#36C65B]/5 blur-[120px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+
+            <!-- Section Header -->
+            <div class="mb-16 text-center animate-enter">
+                <span class="text-[10px] font-mono text-[#36C65B] uppercase tracking-widest block mb-4 flex items-center justify-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#36C65B] animate-pulse inline-block"></span>
+                    Exclusivo para Alunos
+                </span>
+                <h2 class="text-4xl lg:text-6xl leading-tight text-white font-medium tracking-tight max-w-4xl mx-auto uppercase">
+                    Ferramentas de Elite: <br class="hidden lg:block"><span class="text-[#36C65B]">Seus Atalhos Gratuitos</span>
+                </h2>
+                <p class="mt-6 text-neutral-400 font-light max-w-2xl mx-auto leading-relaxed">
+                    Cada bônus foi criado para remover uma barreira específica do seu caminho. Não é preenchimento — é aceleração real.
+                </p>
+            </div>
+
+            <!-- Gift Teaser Line -->
+            <div class="flex justify-center mb-12 animate-enter">
+                <div class="relative flex flex-col sm:flex-row items-center gap-3 sm:gap-4 bg-gradient-to-r from-[#36C65B]/10 via-[#36C65B]/5 to-[#36C65B]/10 border border-[#36C65B]/25 rounded-2xl px-7 py-4 max-w-2xl w-full text-center sm:text-left">
+                    <!-- Pulse dot -->
+                    <div class="shrink-0 w-10 h-10 rounded-full bg-[#36C65B]/15 border border-[#36C65B]/30 flex items-center justify-center">
+                        <iconify-icon icon="solar:gift-bold-duotone" width="22" class="text-[#36C65B]"></iconify-icon>
+                    </div>
+                    <p class="text-sm sm:text-base font-light text-neutral-300 leading-relaxed">
+                        Ao comprar hoje, você leva de presente — além do curso completo —
+                        <strong class="text-[#36C65B] font-semibold">5 ferramentas exclusivas que valem mais do que o investimento em si.</strong>
+                        Sem prazo. Sem custo extra. É tudo seu.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Row 1: 3 main bonus cards -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-5">
+
+                <!-- Bônus 1 -->
+                <div class="bonus-card group relative border-gradient bg-mzv-surface rounded-2xl p-7 flex flex-col gap-5 floating-card cursor-default
+                            hover:shadow-[0_0_40px_rgba(54,198,91,0.35)] transition-all duration-500">
+                    <!-- Badge -->
+                    <span class="absolute top-4 right-4 text-[8px] font-mono tracking-widest uppercase text-[#36C65B] bg-[#36C65B]/10 border border-[#36C65B]/20 px-2 py-0.5 rounded-full">100% OFF</span>
+                    <!-- Icon -->
+                    <div class="w-14 h-14 flex items-center justify-center text-[#36C65B] group-hover:scale-110 transition-transform duration-300">
+                        <iconify-icon icon="solar:cart-large-minimalistic-bold-duotone" width="52" style="--svg-duotone-opacity: 0.2;"></iconify-icon>
+                    </div>
+                    <!-- Content -->
+                    <div>
+                        <span class="text-[9px] font-mono text-neutral-500 uppercase tracking-widest block mb-1">Bônus 01</span>
+                        <h3 class="text-lg font-semibold text-white leading-snug mb-3">Guia de Equipamentos Custo-Benefício</h3>
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">Quando e o quê comprar — <strong class="text-white font-medium">sem desperdício, sem arrependimento.</strong></p>
+                    </div>
+                    <!-- Price tag -->
+                    <div class="flex items-center gap-2 mt-auto pt-3 border-t border-white/5">
+                        <span class="text-neutral-600 text-xs font-mono line-through">R$ 47</span>
+                        <span class="text-[#36C65B] text-xs font-mono font-semibold tracking-widest uppercase">Grátis</span>
+                    </div>
+                    <!-- Bottom beam -->
+                    <div class="bonus-beam absolute bottom-0 left-0 right-0 h-[1px] bg-transparent overflow-hidden rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div class="h-full bg-gradient-to-r from-transparent via-[#36C65B] to-transparent animate-beam-slide"></div>
+                    </div>
+                </div>
+
+                <!-- Bônus 2 -->
+                <div class="bonus-card group relative border-gradient bg-mzv-surface rounded-2xl p-7 flex flex-col gap-5 floating-card cursor-default
+                            hover:shadow-[0_0_40px_rgba(54,198,91,0.35)] transition-all duration-500">
+                    <span class="absolute top-4 right-4 text-[8px] font-mono tracking-widest uppercase text-[#36C65B] bg-[#36C65B]/10 border border-[#36C65B]/20 px-2 py-0.5 rounded-full">GIFT</span>
+                    <div class="w-14 h-14 flex items-center justify-center text-[#36C65B] group-hover:scale-110 transition-transform duration-300">
+                        <iconify-icon icon="solar:stopwatch-play-bold-duotone" width="52" style="--svg-duotone-opacity: 0.2;"></iconify-icon>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-mono text-neutral-500 uppercase tracking-widest block mb-1">Bônus 02</span>
+                        <h3 class="text-lg font-semibold text-white leading-snug mb-3">Workflow de Edição em 30 Minutos</h3>
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">O processo passo a passo para editar <strong class="text-white font-medium">sem travar e sem estresse.</strong></p>
+                    </div>
+                    <!-- Price tag -->
+                    <div class="flex items-center gap-2 mt-auto pt-3 border-t border-white/5">
+                        <span class="text-neutral-600 text-xs font-mono line-through">R$ 97</span>
+                        <span class="text-[#36C65B] text-xs font-mono font-semibold tracking-widest uppercase">Grátis</span>
+                    </div>
+                    <div class="bonus-beam absolute bottom-0 left-0 right-0 h-[1px] bg-transparent overflow-hidden rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div class="h-full bg-gradient-to-r from-transparent via-[#36C65B] to-transparent animate-beam-slide"></div>
+                    </div>
+                </div>
+
+                <!-- Bônus 3 -->
+                <div class="bonus-card group relative border-gradient bg-mzv-surface rounded-2xl p-7 flex flex-col gap-5 floating-card cursor-default
+                            hover:shadow-[0_0_40px_rgba(54,198,91,0.35)] transition-all duration-500">
+                    <span class="absolute top-4 right-4 text-[8px] font-mono tracking-widest uppercase text-[#36C65B] bg-[#36C65B]/10 border border-[#36C65B]/20 px-2 py-0.5 rounded-full">GIFT</span>
+                    <div class="w-14 h-14 flex items-center justify-center text-[#36C65B] group-hover:scale-110 transition-transform duration-300">
+                        <iconify-icon icon="solar:clipboard-check-bold-duotone" width="52" style="--svg-duotone-opacity: 0.2;"></iconify-icon>
+                    </div>
+                    <div>
+                        <span class="text-[9px] font-mono text-neutral-500 uppercase tracking-widest block mb-1">Bônus 03</span>
+                        <h3 class="text-lg font-semibold text-white leading-snug mb-3">Checklist de Execução Modo Criador</h3>
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">O mapa prático para aplicar o método. Um guia rápido para conferir luz, imagem e áudio e <strong class="text-white font-medium">nunca mais perder uma gravação por erro técnico.</strong></p>
+                    </div>
+                    <!-- Price tag -->
+                    <div class="flex items-center gap-2 mt-auto pt-3 border-t border-white/5">
+                        <span class="text-neutral-600 text-xs font-mono line-through">R$ 27</span>
+                        <span class="text-[#36C65B] text-xs font-mono font-semibold tracking-widest uppercase">Grátis</span>
+                    </div>
+                    <div class="bonus-beam absolute bottom-0 left-0 right-0 h-[1px] bg-transparent overflow-hidden rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div class="h-full bg-gradient-to-r from-transparent via-[#36C65B] to-transparent animate-beam-slide"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Row 2: 2 wide highlight cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+                <!-- Bônus 4 -->
+                <div class="bonus-card group relative border-gradient bg-mzv-surface rounded-2xl p-7 flex flex-row items-center gap-6 floating-card cursor-default
+                            hover:shadow-[0_0_50px_rgba(54,198,91,0.4)] transition-all duration-500">
+                    <span class="absolute top-4 right-4 text-[8px] font-mono tracking-widest uppercase text-[#36C65B] bg-[#36C65B]/10 border border-[#36C65B]/20 px-2 py-0.5 rounded-full">GIFT</span>
+                    <!-- Icon block -->
+                    <div class="shrink-0 w-16 h-16 flex items-center justify-center text-[#36C65B] bg-[#36C65B]/5 rounded-2xl border border-[#36C65B]/15 group-hover:scale-110 transition-transform duration-300">
+                        <iconify-icon icon="solar:chat-round-dots-bold-duotone" width="36" style="--svg-duotone-opacity: 0.2;"></iconify-icon>
+                    </div>
+                    <!-- Text -->
+                    <div class="flex-1 min-w-0">
+                        <span class="text-[9px] font-mono text-neutral-500 uppercase tracking-widest block mb-1">Bônus 04</span>
+                        <h3 class="text-lg font-semibold text-white leading-snug mb-2">Comunidade no WhatsApp</h3>
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">Troca de experiências e <strong class="text-white font-medium">networking direto com outros criadores.</strong></p>
+                        <div class="flex items-center gap-2 mt-3 pt-3 border-t border-white/5">
+                            <span class="text-neutral-600 text-xs font-mono line-through">R$ 147</span>
+                            <span class="text-[#36C65B] text-xs font-mono font-semibold tracking-widest uppercase">Grátis</span>
+                        </div>
+                    </div>
+                    <div class="bonus-beam absolute bottom-0 left-0 right-0 h-[1px] bg-transparent overflow-hidden rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div class="h-full bg-gradient-to-r from-transparent via-[#36C65B] to-transparent animate-beam-slide"></div>
+                    </div>
+                </div>
+
+                <!-- Bônus 5 — Premium highlight -->
+                <div class="bonus-card group relative border-gradient rounded-2xl p-7 flex flex-row items-center gap-6 floating-card cursor-default overflow-hidden
+                            shadow-[0_0_30px_rgba(54,198,91,0.2)] hover:shadow-[0_0_80px_rgba(54,198,91,0.7)] transition-all duration-500"
+                     style="background: linear-gradient(135deg, #0d1a11 0%, #0a0f0d 60%, #050505 100%);">
+                    <!-- Glow orb -->
+                    <div class="absolute -top-4 -right-4 w-40 h-40 bg-[#36C65B]/15 blur-3xl rounded-full pointer-events-none group-hover:bg-[#36C65B]/30 transition-all duration-500"></div>
+                    <div class="absolute -bottom-6 -left-6 w-32 h-32 bg-[#36C65B]/10 blur-3xl rounded-full pointer-events-none group-hover:bg-[#36C65B]/20 transition-all duration-500"></div>
+                    <span class="absolute top-4 right-4 text-[8px] font-mono tracking-widest uppercase text-[#36C65B] bg-[#36C65B]/15 border border-[#36C65B]/30 px-2 py-0.5 rounded-full">PREMIUM</span>
+                    <!-- Icon block -->
+                    <div class="shrink-0 w-16 h-16 flex items-center justify-center text-[#36C65B] bg-[#36C65B]/10 rounded-2xl border border-[#36C65B]/25 group-hover:scale-110 group-hover:bg-[#36C65B]/20 transition-all duration-300">
+                        <iconify-icon icon="solar:videocamera-add-bold-duotone" width="36" style="--svg-duotone-opacity: 0.2;"></iconify-icon>
+                    </div>
+                    <!-- Text -->
+                    <div class="flex-1 min-w-0 relative z-10">
+                        <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest block mb-1">Bônus 05 — Mais Valioso</span>
+                        <h3 class="text-lg font-semibold text-white leading-snug mb-2">Encontros em Grupo Quinzenais</h3>
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed">Reuniões ao vivo a cada 15 dias com toda a turma para <strong class="text-[#36C65B] font-medium">tirar dúvidas, trocar experiências e evoluir junto.</strong></p>
+                        <div class="flex items-center gap-2 mt-3 pt-3 border-t border-[#36C65B]/15">
+                            <span class="text-neutral-600 text-xs font-mono line-through">R$ 497</span>
+                            <span class="text-[#36C65B] text-xs font-mono font-semibold tracking-widest uppercase">Grátis</span>
+                        </div>
+                    </div>
+                    <div class="bonus-beam absolute bottom-0 left-0 right-0 h-[1px] bg-transparent overflow-hidden rounded-b-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <div class="h-full bg-gradient-to-r from-transparent via-[#36C65B] to-transparent animate-beam-slide"></div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Total Value callout -->
+            <div class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 text-center animate-enter delay-300">
+                <div class="flex items-center gap-3 border border-[#36C65B]/20 bg-[#36C65B]/5 px-6 py-3 rounded-full">
+                    <iconify-icon icon="solar:gift-bold-duotone" width="20" class="text-[#36C65B]"></iconify-icon>
+                    <span class="text-sm font-mono text-neutral-300 tracking-wide">
+                        5 Bônus avaliados em
+                        <span class="line-through text-neutral-500">R$ 815</span>
+                        — tudo isso <strong class="text-[#36C65B]">100% grátis para você hoje</strong>
+                    </span>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== OFERTA FINAL (CHECKOUT) ===== -->
+    <section id="checkout" class="relative py-28 px-6 overflow-hidden">
+        <div class="max-w-7xl mx-auto relative z-10 flex justify-center">
+            
+            <!-- Checkout Card Container -->
+            <div class="w-full max-w-[600px] bg-mzv-surface border-gradient rounded-3xl p-8 lg:p-12 shadow-glow-primary floating-card animate-enter relative">
+                
+                <!-- Headline -->
+                <div class="text-center mb-10">
+                    <h2 class="text-3xl lg:text-4xl font-medium tracking-tight bg-gradient-to-r from-white via-[#36C65B] to-white bg-clip-text text-transparent uppercase">
+                        A decisão é sua.
+                    </h2>
+                </div>
+
+                <!-- Pricing Display -->
+                <div class="text-center mb-10">
+                    <p class="text-neutral-400 text-sm mb-1 uppercase tracking-widest">Por apenas 12x de</p>
+                    <div class="flex items-center justify-center gap-2 mb-2">
+                        <span class="text-6xl lg:text-7xl font-bold text-[#36C65B] tracking-tighter">R$ 19,71</span>
+                    </div>
+                    <p class="text-xl text-neutral-300 mb-2">Ou R$ 197 à vista</p>
+                    <p class="text-sm text-[#36C65B] italic font-light opacity-80">(menos de 55 centavos por dia)</p>
+                </div>
+
+                <!-- Benefits Checklist -->
+                <div class="space-y-4 mb-12 max-w-md mx-auto">
+                    <div class="flex items-center gap-3 text-neutral-300">
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="text-[#36C65B] shrink-0"></iconify-icon>
+                        <span class="text-sm lg:text-base">Acesso vitalício ao método completo</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-neutral-300">
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="text-[#36C65B] shrink-0"></iconify-icon>
+                        <span class="text-sm lg:text-base">Comunidade VIP de Criadores no WhatsApp</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-neutral-300">
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="text-[#36C65B] shrink-0"></iconify-icon>
+                        <span class="text-sm lg:text-base">Encontros em Grupo Quinzenais ao vivo</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-neutral-300">
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="text-[#36C65B] shrink-0"></iconify-icon>
+                        <span class="text-sm lg:text-base">Guia de Equipamentos + Workflow + Checklist</span>
+                    </div>
+                    <div class="flex items-center gap-3 text-neutral-300">
+                        <iconify-icon icon="solar:check-circle-bold-duotone" width="24" class="text-[#36C65B] shrink-0"></iconify-icon>
+                        <span class="text-sm lg:text-base">Suporte direto na plataforma</span>
+                    </div>
+                </div>
+
+                <!-- CTA Button -->
+                <div class="text-center mb-8">
+                    <button class="w-full bg-[#36C65B] text-black text-lg font-bold py-5 px-8 rounded-full shadow-[0_0_30px_rgba(54,198,91,0.4)] transition-all duration-300 hover:scale-[1.03] hover:shadow-[0_0_50px_rgba(54,198,91,0.6)] animate-pulse-subtle active:scale-95">
+                        SEM RISCO. QUERO COMEÇAR AGORA
+                    </button>
+                </div>
+
+                <!-- Trust Footer -->
+                <div class="text-center border-t border-white/5 pt-8">
+                    <div class="flex items-center justify-center gap-6 mb-4 opacity-60 grayscale hover:grayscale-0 transition-all duration-300">
+                        <div class="flex flex-col items-center gap-1">
+                            <iconify-icon icon="solar:shield-check-bold" width="24" class="text-[#36C65B]"></iconify-icon>
+                            <span class="text-[9px] uppercase tracking-tighter text-white">Compra Segura</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <iconify-icon icon="solar:star-bold" width="24" class="text-[#36C65B]"></iconify-icon>
+                            <span class="text-[9px] uppercase tracking-tighter text-white">Satisfação Garantida</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-1">
+                            <iconify-icon icon="solar:lock-bold" width="24" class="text-[#36C65B]"></iconify-icon>
+                            <span class="text-[9px] uppercase tracking-tighter text-white">Privacidade Protegida</span>
+                        </div>
+                    </div>
+                    <p class="text-[10px] text-neutral-500 uppercase tracking-widest leading-relaxed">
+                        Acesso completo. Acesso imediato. <br>
+                        <span class="text-[#36C65B] font-semibold">Garantia incondicional de 7 dias</span>
+                    </p>
+                </div>
+
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Custom Animations for Checkout -->
+    <style>
+        @keyframes pulse-subtle {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 30px rgba(54, 198, 91, 0.4); }
+            50% { transform: scale(1.02); box-shadow: 0 0 50px rgba(54, 198, 91, 0.6); }
+        }
+        .animate-pulse-subtle {
+            animation: pulse-subtle 3s infinite ease-in-out;
+        }
+    </style>
+
+    <!-- Bonus beam animation -->
+    <style>
+        @keyframes beam-slide-bonus {
+            0%   { transform: translateX(-100%); }
+            100% { transform: translateX(100%);  }
+        }
+        .animate-beam-slide {
+            animation: beam-slide-bonus 2s ease-in-out infinite;
+        }
+    </style>
+
+    <!-- Module Card Styles & Interaction -->
+    <style>
+        /* Arrow rotation when card is open */
+        details.module-card[open] .module-arrow { transform: rotate(180deg); }
+
+        /* Remove default marker */
+        details.module-card summary::-webkit-details-marker,
+        details.module-card summary::marker { display: none; content: ""; }
+
+        /* Animation for content reveal */
+        .animate-fadeIn {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Active glow when open */
+        details.module-card[open] {
+            box-shadow: 0 0 30px rgba(54, 198, 91, 0.25);
+            transform: scale(1.02);
+        }
+
+        /* Intensify border glow when open */
+        details.module-card[open]::before {
+            opacity: 1 !important;
+            filter: brightness(1.3);
+        }
+    </style>
+
+    <script>
+        // Accordion controller: auto-closes others when one opens
+        document.addEventListener('DOMContentLoaded', function() {
+            const details = document.querySelectorAll('#modules-grid details.module-card');
+            
+            details.forEach(targetDetail => {
+                targetDetail.addEventListener('toggle', function(e) {
+                    if (targetDetail.open) {
+                        details.forEach(detail => {
+                            if (detail !== targetDetail && detail.open) {
+                                detail.open = false;
+                            }
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+    <!-- Style additions for scroll animations -->
+    <style>
+        @keyframes organicFadeIn {
+            0% { opacity: 0; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1.0); }
+        }
+        .instructor-photo-wrapper { opacity: 0; }
+    </style>
+
+    <!-- Vturb Script Request -->
+    <script type="text/javascript">
+        var s=document.createElement("script");
+        s.src="https://scripts.converteai.net/808eb86e-5343-4bb3-a93a-b5c65c959b16/players/69d6754b8727dfad14f07bd9/v4/player.js",
+        s.async=!0,
+        document.head.appendChild(s);
+    </script>
+    <!-- ===== FAQ ===== -->
+    <section id="faq" class="relative py-28 px-6 lg:px-12 overflow-hidden">
+
+        <!-- Background accent -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-[#36C65B]/3 blur-[140px] rounded-full pointer-events-none"></div>
+
+        <div class="max-w-3xl mx-auto relative z-10">
+
+            <!-- Section Header -->
+            <div class="mb-14 text-center animate-enter">
+                <span class="text-[10px] font-mono text-[#36C65B] uppercase tracking-widest block mb-4 flex items-center justify-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-[#36C65B] animate-pulse inline-block"></span>
+                    Perguntas Frequentes
+                </span>
+                <h2 class="text-4xl lg:text-5xl leading-tight text-white font-medium tracking-tight uppercase">
+                    FAQ
+                </h2>
+                <p class="mt-4 text-neutral-500 font-light max-w-lg mx-auto text-sm leading-relaxed">
+                    Tudo que você precisa saber antes de tomar a melhor decisão.
+                </p>
+            </div>
+
+            <!-- FAQ Items -->
+            <div class="space-y-3" id="faq-list">
+
+                <!-- Q1 -->
+                <details class="faq-item group rounded-2xl overflow-hidden cursor-pointer"
+                    style="background: linear-gradient(135deg, #0d0d10, #111113); border: 1px solid rgba(255,255,255,0.06);">
+                    <summary class="faq-summary flex items-center gap-4 px-6 py-5 select-none list-none outline-none relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style="background: linear-gradient(135deg, rgba(54,198,91,0.05) 0%, transparent 70%);"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#36C65B] font-mono font-bold text-xs"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">1</span>
+                        <span class="flex-1 text-white font-medium text-sm sm:text-base leading-snug pr-4">Preciso de uma câmera profissional para começar?</span>
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="18" class="shrink-0 text-neutral-500 faq-arrow transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div class="faq-body px-6 pb-6 pt-1 border-t" style="border-color: rgba(255,255,255,0.05);">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed pt-4">De jeito nenhum! O curso parte do princípio que <strong class="text-white font-medium">conhecimento vale mais do que equipamento</strong>. Você vai aprender a extrair resultados profissionais usando o que já tem nas mãos hoje, seja um celular ou uma luz natural.</p>
+                    </div>
+                </details>
+
+                <!-- Q2 -->
+                <details class="faq-item group rounded-2xl overflow-hidden cursor-pointer"
+                    style="background: linear-gradient(135deg, #0d0d10, #111113); border: 1px solid rgba(255,255,255,0.06);">
+                    <summary class="faq-summary flex items-center gap-4 px-6 py-5 select-none list-none outline-none relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style="background: linear-gradient(135deg, rgba(54,198,91,0.05) 0%, transparent 70%);"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#36C65B] font-mono font-bold text-xs"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">2</span>
+                        <span class="flex-1 text-white font-medium text-sm sm:text-base leading-snug pr-4">O curso serve para iPhone ou Android?</span>
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="18" class="shrink-0 text-neutral-500 faq-arrow transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div class="faq-body px-6 pb-6 pt-1 border-t" style="border-color: rgba(255,255,255,0.05);">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed pt-4">Para os dois! Temos módulos dedicados para você dominar as lentes e o Modo Pro de qualquer um dos sistemas. Vou te ensinar a configurar o celular para que ele <strong class="text-white font-medium">pare de tomar decisões erradas por você</strong> e entregue uma imagem de cinema.</p>
+                    </div>
+                </details>
+
+                <!-- Q3 -->
+                <details class="faq-item group rounded-2xl overflow-hidden cursor-pointer"
+                    style="background: linear-gradient(135deg, #0d0d10, #111113); border: 1px solid rgba(255,255,255,0.06);">
+                    <summary class="faq-summary flex items-center gap-4 px-6 py-5 select-none list-none outline-none relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style="background: linear-gradient(135deg, rgba(54,198,91,0.05) 0%, transparent 70%);"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#36C65B] font-mono font-bold text-xs"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">3</span>
+                        <span class="flex-1 text-white font-medium text-sm sm:text-base leading-snug pr-4">Não entendo nada de técnica. Vou ficar perdido?</span>
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="18" class="shrink-0 text-neutral-500 faq-arrow transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div class="faq-body px-6 pb-6 pt-1 border-t" style="border-color: rgba(255,255,255,0.05);">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed pt-4">Pelo contrário. Vou te explicar conceitos como o Triângulo de Exposição de um jeito que você nunca ouviu, para que até quem é <strong class="text-white font-medium">iniciante absoluto</strong> consiga dominar ISO, abertura e velocidade sem sofrimento.</p>
+                    </div>
+                </details>
+
+                <!-- Q4 -->
+                <details class="faq-item group rounded-2xl overflow-hidden cursor-pointer"
+                    style="background: linear-gradient(135deg, #0d0d10, #111113); border: 1px solid rgba(255,255,255,0.06);">
+                    <summary class="faq-summary flex items-center gap-4 px-6 py-5 select-none list-none outline-none relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style="background: linear-gradient(135deg, rgba(54,198,91,0.05) 0%, transparent 70%);"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#36C65B] font-mono font-bold text-xs"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">4</span>
+                        <span class="flex-1 text-white font-medium text-sm sm:text-base leading-snug pr-4">Terei acesso a todo o conteúdo imediatamente?</span>
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="18" class="shrink-0 text-neutral-500 faq-arrow transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div class="faq-body px-6 pb-6 pt-1 border-t" style="border-color: rgba(255,255,255,0.05);">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed pt-4">Com certeza! Assim que sua inscrição for confirmada, <strong class="text-white font-medium">todas as aulas do curso são liberadas</strong> para você começar a aplicar. A única exceção são os Bônus Exclusivos, que ficam disponíveis após 7 dias de acesso.</p>
+                    </div>
+                </details>
+
+                <!-- Q5 -->
+                <details class="faq-item group rounded-2xl overflow-hidden cursor-pointer"
+                    style="background: linear-gradient(135deg, #0d0d10, #111113); border: 1px solid rgba(255,255,255,0.06);">
+                    <summary class="faq-summary flex items-center gap-4 px-6 py-5 select-none list-none outline-none relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style="background: linear-gradient(135deg, rgba(54,198,91,0.05) 0%, transparent 70%);"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#36C65B] font-mono font-bold text-xs"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">5</span>
+                        <span class="flex-1 text-white font-medium text-sm sm:text-base leading-snug pr-4">Por quanto tempo poderei assistir às aulas?</span>
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="18" class="shrink-0 text-neutral-500 faq-arrow transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div class="faq-body px-6 pb-6 pt-1 border-t" style="border-color: rgba(255,255,255,0.05);">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed pt-4">O seu acesso é <strong class="text-white font-medium">vitalício</strong>. Você pode assistir no seu ritmo, voltar nas aulas sempre que precisar e ainda garantir todas as atualizações futuras do conteúdo sem pagar nada a mais por isso.</p>
+                    </div>
+                </details>
+
+                <!-- Q6 -->
+                <details class="faq-item group rounded-2xl overflow-hidden cursor-pointer"
+                    style="background: linear-gradient(135deg, #0d0d10, #111113); border: 1px solid rgba(255,255,255,0.06);">
+                    <summary class="faq-summary flex items-center gap-4 px-6 py-5 select-none list-none outline-none relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style="background: linear-gradient(135deg, rgba(54,198,91,0.05) 0%, transparent 70%);"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#36C65B] font-mono font-bold text-xs"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">6</span>
+                        <span class="flex-1 text-white font-medium text-sm sm:text-base leading-snug pr-4">Quais são as formas de pagamento?</span>
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="18" class="shrink-0 text-neutral-500 faq-arrow transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div class="faq-body px-6 pb-6 pt-1 border-t" style="border-color: rgba(255,255,255,0.05);">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed pt-4">Você pode garantir sua vaga agora mesmo através de <strong class="text-white font-medium">Pix</strong> (com liberação imediata) ou via <strong class="text-white font-medium">cartão de crédito</strong>, podendo parcelar o seu investimento.</p>
+                    </div>
+                </details>
+
+                <!-- Q7 -->
+                <details class="faq-item group rounded-2xl overflow-hidden cursor-pointer"
+                    style="background: linear-gradient(135deg, #0d0d10, #111113); border: 1px solid rgba(255,255,255,0.06);">
+                    <summary class="faq-summary flex items-center gap-4 px-6 py-5 select-none list-none outline-none relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style="background: linear-gradient(135deg, rgba(54,198,91,0.05) 0%, transparent 70%);"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#36C65B] font-mono font-bold text-xs"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">7</span>
+                        <span class="flex-1 text-white font-medium text-sm sm:text-base leading-snug pr-4">Vou aprender a editar meus vídeos também?</span>
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="18" class="shrink-0 text-neutral-500 faq-arrow transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div class="faq-body px-6 pb-6 pt-1 border-t" style="border-color: rgba(255,255,255,0.05);">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed pt-4">Sim! Vamos do corte básico até a finalização profissional. Vou te mostrar como usar o <strong class="text-white font-medium">CapCut</strong> para edições rápidas e dinâmicas, e o <strong class="text-white font-medium">DaVinci Resolve</strong> para quem quer um controle de cor e qualidade de nível superior.</p>
+                    </div>
+                </details>
+
+                <!-- Q8 -->
+                <details class="faq-item group rounded-2xl overflow-hidden cursor-pointer"
+                    style="background: linear-gradient(135deg, #0d0d10, #111113); border: 1px solid rgba(255,255,255,0.06);">
+                    <summary class="faq-summary flex items-center gap-4 px-6 py-5 select-none list-none outline-none relative overflow-hidden">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none"
+                            style="background: linear-gradient(135deg, rgba(54,198,91,0.05) 0%, transparent 70%);"></div>
+                        <div class="absolute left-0 top-0 bottom-0 w-[3px] bg-gradient-to-b from-[#36C65B] to-[#28A748] opacity-40 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <span class="shrink-0 w-7 h-7 rounded-lg flex items-center justify-center text-[#36C65B] font-mono font-bold text-xs"
+                            style="background: rgba(54,198,91,0.1); border: 1px solid rgba(54,198,91,0.2);">8</span>
+                        <span class="flex-1 text-white font-medium text-sm sm:text-base leading-snug pr-4">Como tiro minhas dúvidas durante o curso?</span>
+                        <iconify-icon icon="solar:alt-arrow-down-linear" width="18" class="shrink-0 text-neutral-500 faq-arrow transition-transform duration-300"></iconify-icon>
+                    </summary>
+                    <div class="faq-body px-6 pb-6 pt-1 border-t" style="border-color: rgba(255,255,255,0.05);">
+                        <p class="text-neutral-400 text-sm font-light leading-relaxed pt-4">Abaixo de cada aula existe uma aba de dúvidas. Sempre que você postar lá, em até no máximo <strong class="text-white font-medium">2 dias úteis</strong> você terá sua dúvida respondida. No Modo Criador, você nunca fica caminhando sozinho.</p>
+                    </div>
+                </details>
+
+            </div>
+
+            <!-- Dica do Rodrigo -->
+            <div class="mt-10 rounded-2xl p-6 flex gap-4 items-start relative overflow-hidden"
+                style="background: linear-gradient(135deg, rgba(54,198,91,0.07) 0%, rgba(54,198,91,0.03) 100%); border: 1px solid rgba(54,198,91,0.2);">
+                <!-- Glow -->
+                <div class="absolute -top-6 -right-6 w-32 h-32 bg-[#36C65B]/10 blur-3xl rounded-full pointer-events-none"></div>
+                <!-- Lamp icon -->
+                <div class="shrink-0 w-10 h-10 rounded-xl flex items-center justify-center"
+                    style="background: rgba(54,198,91,0.12); border: 1px solid rgba(54,198,91,0.25);">
+                    <iconify-icon icon="solar:lightbulb-bold-duotone" width="22" class="text-[#36C65B]"></iconify-icon>
+                </div>
+                <div class="relative z-10">
+                    <span class="text-[9px] font-mono text-[#36C65B] uppercase tracking-widest block mb-2">Dica do Rodrigo</span>
+                    <p class="text-neutral-300 text-sm font-light leading-relaxed">
+                        <span class="text-white font-medium">"Não saia maratonando o curso como se fosse uma série.</span> O segredo aqui é: assistiu, aplicou e testou. É a prática que vai fazer o seu bolso e o seu conteúdo agradecerem."
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="border-t border-white/5 py-12 px-6 lg:px-12 text-center text-neutral-500 font-light text-[11px] leading-relaxed relative z-10 bg-[#050505]">
+        <div class="max-w-3xl mx-auto flex flex-col gap-6">
+            <div class="font-mono text-[#36C65B] uppercase tracking-widest text-[10px] space-y-1">
+                <p>&copy; 2026 por Rodrigo Baião</p>
+                <p>44.997.3331/0001-13 - FICTUS CONTENT PRODUCOES LTDA</p>
+            </div>
+            
+            <p class="opacity-50 text-[10px] mx-auto text-justify sm:text-center">
+                AVISO LEGAL: Este site não faz parte do site do Facebook ou Facebook Inc. Além disso, este site NÃO é endossado pelo Facebook de forma alguma. FACEBOOK é uma marca comercial da FACEBOOK, Inc. Todas as informações dos visitantes, como nome e e-mail, são protegidas e não serão compartilhadas, divulgadas ou vendidas para terceiros.
+            </p>
+        </div>
+    </footer>
+
+    <!-- FAQ styles & accordion script -->
+    <style>
+        details.faq-item summary::-webkit-details-marker { display: none; }
+        details.faq-item summary::marker { display: none; content: ""; }
+        details.faq-item[open] { border-color: rgba(54,198,91,0.2) !important; box-shadow: 0 0 20px rgba(54,198,91,0.1); }
+        details.faq-item[open] .faq-arrow { transform: rotate(180deg); color: #36C65B; }
+        details.faq-item[open] .absolute.left-0 { opacity: 1 !important; }
+        .faq-body { animation: fadeIn 0.3s ease-out forwards; }
+    </style>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const faqItems = document.querySelectorAll('#faq-list details.faq-item');
+            faqItems.forEach(function (item) {
+                item.addEventListener('toggle', function () {
+                    if (item.open) {
+                        faqItems.forEach(function (other) {
+                            if (other !== item && other.open) other.open = false;
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

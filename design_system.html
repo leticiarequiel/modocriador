@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Modo Criador - Design System</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Scripts (Lucide & Tailwind as fallback to ensure rendering) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://code.iconify.design/3/3.1.0/iconify.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#0f172a',    // slate-900
+                        secondary: '#4ade80',  // green-400
+                        accent: '#f97316',     // orange-500
+                        neutral: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                        feedback: {
+                            success: '#10b981',
+                            warning: '#eab308',
+                            error: '#ef4444',
+                        }
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.8s ease-out forwards',
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'reveal': 'revealUp 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'beam-h': 'beam-h 5s infinite',
+                        'beam-v': 'beam-v 5s infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                        'spin-slow': 'spin 8s linear infinite',
+                    },
+                    keyframes: {
+                        fadeIn: { 'to': { opacity: '1' } },
+                        slideUp: { 'to': { opacity: '1', transform: 'translateY(0)' } },
+                        revealUp: { 
+                            '0%': { clipPath: 'inset(100% 0 0 0)', transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { clipPath: 'inset(0 0 0 0)', transform: 'translateY(0)', opacity: '1' }
+                        },
+                        'beam-h': {
+                            '0%': { left: '-200px', opacity: '0' },
+                            '10%': { opacity: '1' },
+                            '90%': { opacity: '1' },
+                            '100%': { left: '100%', opacity: '0' }
+                        },
+                        'beam-v': {
+                            '0%': { top: '-200px', opacity: '0' },
+                            '10%': { opacity: '1' },
+                            '90%': { opacity: '1' },
+                            '100%': { top: '100%', opacity: '0' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 1, transform: 'scale(1)' },
+                            '50%': { opacity: .7, transform: 'scale(1.05)', filter: 'drop-shadow(0 0 15px rgba(74, 222, 128, 0.5))' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Base & Resets */
+        body { font-family: 'Inter', sans-serif; background-color: #cfddea; color: #0f172a; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        /* Grid & Beams */
+        :root {
+            --beam-color: #4ade80;
+            --grid-color: rgba(15, 23, 42, 0.05);
+        }
+        .grid-bg {
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 80px 80px;
+        }
+        .beam-h-element {
+            position: absolute; height: 1px; width: 200px;
+            background: linear-gradient(90deg, transparent, var(--beam-color), transparent);
+            z-index: 10; opacity: 0;
+        }
+        .beam-v-element {
+            position: absolute; width: 1px; height: 200px;
+            background: linear-gradient(180deg, transparent, var(--beam-color), transparent);
+            z-index: 10; opacity: 0;
+        }
+
+        /* Glassmorphism Classes */
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .glass-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 20px 40px -10px rgba(74, 222, 128, 0.15);
+            border-color: rgba(74, 222, 128, 0.3);
+        }
+
+        /* Border Gradients */
+        [style*="--border-gradient"]::before {
+            content: ""; position: absolute; inset: 0; padding: 2px;
+            border-radius: var(--border-radius-before, inherit);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor; mask-composite: exclude;
+            background: var(--border-gradient); pointer-events: none;
+        }
+
+        /* Initial States for Animations */
+        .animate-fade-in { opacity: 0; animation-delay: var(--delay, 0s); }
+        .animate-slide-up { opacity: 0; transform: translateY(20px); animation-delay: var(--delay, 0s); }
+        .animate-reveal { opacity: 0; animation-delay: var(--delay, 0s); }
+        
+        /* Perspective utilities */
+        .perspective-1000 { perspective: 1000px; }
+        .preserve-3d { transform-style: preserve-3d; }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative overflow-x-hidden">
+
+    <!-- Ambient Background -->
+    <div class="fixed inset-0 z-[-1] grid-bg"></div>
+    <div class="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-br from-green-100/50 via-white/30 to-orange-100/30 blur-3xl rounded-full z-[-1] opacity-60 pointer-events-none transform -translate-y-1/2"></div>
+    <div class="fixed bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-tl from-slate-200/50 via-green-50/40 to-transparent blur-3xl rounded-full z-[-1] opacity-60 pointer-events-none transform translate-y-1/3 translate-x-1/3"></div>
+
+    <!-- Sticky Navbar -->
+    <nav class="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 glass-panel rounded-full px-8 py-4 w-[90%] max-w-5xl flex items-center justify-between shadow-lg animate-slide-up" style="--delay: 0.1s;">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-primary to-secondary flex items-center justify-center text-white shadow-lg animate-pulse-glow">
+                <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+            </div>
+            <span class="font-display font-bold text-xl tracking-tight text-primary">Modo<span class="text-secondary">Criador</span></span>
+        </div>
+        <div class="hidden md:flex gap-8 text-sm font-semibold text-slate-600 uppercase tracking-widest">
+            <a href="#hero" class="hover:text-secondary hover:scale-105 transition-all">Hero</a>
+            <a href="#typography" class="hover:text-secondary hover:scale-105 transition-all">Type</a>
+            <a href="#colors" class="hover:text-secondary hover:scale-105 transition-all">Colors</a>
+            <a href="#components" class="hover:text-secondary hover:scale-105 transition-all">Components</a>
+        </div>
+        <div>
+            <a href="#components" class="group relative inline-flex items-center justify-center px-6 py-2.5 text-sm font-semibold text-white transition-all duration-200 bg-primary font-display rounded-full hover:bg-slate-800 hover:shadow-lg hover:-translate-y-0.5 overflow-hidden">
+                <span class="relative z-10 flex items-center gap-2">Explorar <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition-transform"></i></span>
+                <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]"></div>
+            </a>
+        </div>
+    </nav>
+
+    <!-- 1. Hero Section -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-24 pb-12 px-6 overflow-hidden">
+        <!-- Decoration Beams -->
+        <div class="absolute top-1/4 left-0 w-full h-px hidden md:block">
+            <div class="beam-h-element animate-beam-h" style="animation-duration: 6s; opacity: 0.5;"></div>
+        </div>
+        <div class="absolute top-0 right-1/4 w-px h-full hidden md:block">
+            <div class="beam-v-element animate-beam-v" style="animation-duration: 8s; animation-delay: 2s; opacity: 0.5;"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center w-full z-10">
+            <!-- Left: Typography & CTA -->
+            <div class="flex flex-col items-start text-left">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel border border-white/60 mb-8 animate-slide-up" style="--delay: 0.2s;">
+                    <span class="relative flex h-2 w-2">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+                    </span>
+                    <span class="text-xs font-bold uppercase tracking-widest text-slate-600">Design System V2.0</span>
+                </div>
+                
+                <h1 class="font-display text-5xl sm:text-7xl font-bold text-primary leading-[1.1] tracking-tight mb-6 animate-reveal" style="--delay: 0.3s;">
+                    Criatividade <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-primary">Sem Limites.</span>
+                </h1>
+                
+                <p class="text-lg text-slate-600 font-medium max-w-xl mb-10 leading-relaxed animate-fade-in border-l-4 border-secondary/30 pl-4" style="--delay: 0.4s;">
+                    A biblioteca definitiva de padrões visuais, componentes e interações. Projetado para elevar a experiência do usuário, combinando estética premium com funcionalidades avançadas.
+                </p>
+                
+                <div class="flex flex-wrap gap-4 animate-slide-up" style="--delay: 0.5s;">
+                    <a href="#components" class="group flex items-center gap-3 bg-primary text-white px-8 py-4 rounded-full font-semibold shadow-xl hover:shadow-2xl hover:shadow-primary/20 transition-all hover:-translate-y-1">
+                        Ver Componentes
+                        <span class="bg-white/20 p-1.5 rounded-full group-hover:rotate-45 transition-transform duration-300">
+                            <i data-lucide="arrow-up-right" class="w-4 h-4 text-white"></i>
+                        </span>
+                    </a>
+                    <a href="#typography" class="group flex items-center gap-3 glass-panel px-8 py-4 rounded-full font-semibold text-primary hover:bg-white/80 transition-all">
+                        <i data-lucide="book-open" class="w-5 h-5 text-secondary"></i>
+                        Documentação
+                    </a>
+                </div>
+
+                <div class="mt-12 flex items-center gap-6 animate-fade-in" style="--delay: 0.6s;">
+                    <div class="flex -space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-slate-200 border-2 border-white overflow-hidden shadow-sm"><img src="https://i.pravatar.cc/100?img=1" alt="Avatar"></div>
+                        <div class="w-10 h-10 rounded-full bg-slate-300 border-2 border-white overflow-hidden shadow-sm"><img src="https://i.pravatar.cc/100?img=2" alt="Avatar"></div>
+                        <div class="w-10 h-10 rounded-full bg-slate-400 border-2 border-white overflow-hidden shadow-sm"><img src="https://i.pravatar.cc/100?img=3" alt="Avatar"></div>
+                        <div class="w-10 h-10 rounded-full bg-secondary border-2 border-white flex items-center justify-center text-white text-xs font-bold shadow-sm">+5k</div>
+                    </div>
+                    <div class="flex flex-col">
+                        <div class="flex text-accent mb-1">
+                            <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                            <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                            <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                            <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                            <i data-lucide="star" class="fill-current w-4 h-4"></i>
+                        </div>
+                        <span class="text-xs font-semibold text-slate-500 uppercase tracking-wider">Aprovado por Criadores</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: 3D Visual Card -->
+            <div class="relative w-full h-[500px] perspective-1000 animate-slide-up" style="--delay: 0.4s;">
+                <div class="absolute inset-0 bg-gradient-to-tr from-secondary/20 to-accent/20 rounded-[2.5rem] transform rotate-3 scale-105 blur-lg opacity-60"></div>
+                <div class="relative w-full h-full glass-card rounded-[2.5rem] p-8 flex flex-col justify-between overflow-hidden preserve-3d group border-white/60" style="position: relative; --border-gradient: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.1), rgba(74,222,128,0.5)); --border-radius-before: 2.5rem;">
+                    
+                    <!-- Decorative shapes inside card -->
+                    <div class="absolute -top-20 -right-20 w-64 h-64 bg-secondary/10 rounded-full blur-3xl group-hover:bg-secondary/20 transition-colors duration-700"></div>
+                    <div class="absolute -bottom-20 -left-20 w-64 h-64 bg-accent/10 rounded-full blur-3xl group-hover:bg-accent/20 transition-colors duration-700"></div>
+
+                    <!-- Header -->
+                    <div class="flex justify-between items-start z-10 transform translate-z-10">
+                        <div class="glass-panel px-4 py-2 rounded-xl flex items-center gap-2">
+                            <i data-lucide="shield-check" class="text-secondary w-5 h-5"></i>
+                            <span class="text-sm font-bold text-primary">Status do Sistema</span>
+                        </div>
+                        <div class="w-12 h-12 bg-white rounded-full flex items-center justify-center shadow-md text-primary animate-pulse-glow">
+                            <i data-lucide="activity" class="w-6 h-6"></i>
+                        </div>
+                    </div>
+
+                    <!-- Center animated elements -->
+                    <div class="my-auto z-10 w-full transform translate-z-20">
+                        <!-- Simulated loading bars -->
+                        <div class="space-y-4 w-full">
+                            <div class="flex justify-between mb-1 text-xs font-bold text-slate-500 uppercase tracking-widest">
+                                <span>Componentes Carregados</span>
+                                <span class="text-secondary">100%</span>
+                            </div>
+                            <div class="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                                <div class="h-full bg-gradient-to-r from-secondary to-primary w-full rounded-full relative">
+                                    <div class="absolute inset-0 bg-white/30 animate-[shimmer_2s_infinite] w-full" style="background-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent); left: -100%;"></div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex gap-4 mt-8">
+                                <div class="flex-1 glass-panel p-4 rounded-[2rem] border border-white/50 text-center hover:-translate-y-2 transition-transform duration-300">
+                                    <i data-lucide="layout-template" class="w-8 h-8 mx-auto text-secondary mb-2"></i>
+                                    <span class="block text-2xl font-bold text-primary mb-1">45+</span>
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Padrões</span>
+                                </div>
+                                <div class="flex-1 glass-panel p-4 rounded-[2rem] border border-white/50 text-center hover:-translate-y-2 transition-transform duration-300">
+                                    <i data-lucide="palette" class="w-8 h-8 mx-auto text-accent mb-2"></i>
+                                    <span class="block text-2xl font-bold text-primary mb-1">Inf</span>
+                                    <span class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Cores</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Divider -->
+    <div class="w-full flex justify-center py-12 opacity-50">
+        <div class="w-full max-w-7xl h-px bg-gradient-to-r from-transparent via-slate-300 to-transparent"></div>
+    </div>
+
+    <!-- 2. Typography -->
+    <section id="typography" class="py-24 px-6 relative z-10">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 animate-reveal">
+                <span class="text-sm font-mono text-secondary font-bold tracking-widest uppercase mb-2 block">01 / Fundamentos</span>
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-primary mb-4">Tipografia</h2>
+                <p class="text-slate-600 max-w-2xl font-medium text-lg leading-relaxed">
+                    Nossa hierarquia de texto é baseada na combinação de <span class="font-display font-bold text-primary">Plus Jakarta Sans</span> para títulos de impacto e <span class="font-sans font-semibold text-primary">Inter</span> para leitura fluida em corpos de texto.
+                </p>
+            </div>
+
+            <div class="glass-card rounded-[2.5rem] p-8 md:p-12 animate-slide-up" style="--delay:0.2s;">
+                <div class="space-y-10">
+                    <!-- H1 -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/50 pb-8 hover:bg-slate-50/50 p-4 rounded-[2rem] transition-colors">
+                        <div class="md:w-1/4">
+                            <span class="text-xs font-mono text-slate-400 font-bold uppercase tracking-widest">Display H1</span>
+                            <div class="text-[10px] text-slate-400 mt-1">Plus Jakarta Sans / ExtraBold</div>
+                        </div>
+                        <div class="md:w-1/2">
+                            <h1 class="font-display text-5xl md:text-6xl font-extrabold tracking-tighter text-primary">Hero Display</h1>
+                        </div>
+                        <div class="md:w-1/4 md:text-right">
+                            <span class="text-xs font-mono bg-white px-3 py-1 rounded-full shadow-sm text-slate-500">60px / 1.1</span>
+                        </div>
+                    </div>
+                    
+                    <!-- H2 -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/50 pb-8 hover:bg-slate-50/50 p-4 rounded-[2rem] transition-colors">
+                        <div class="md:w-1/4">
+                            <span class="text-xs font-mono text-slate-400 font-bold uppercase tracking-widest">Heading H2</span>
+                            <div class="text-[10px] text-slate-400 mt-1">Plus Jakarta Sans / Bold</div>
+                        </div>
+                        <div class="md:w-1/2">
+                            <h2 class="font-display text-4xl md:text-5xl font-bold tracking-tight text-primary">Section Title</h2>
+                        </div>
+                        <div class="md:w-1/4 md:text-right">
+                            <span class="text-xs font-mono bg-white px-3 py-1 rounded-full shadow-sm text-slate-500">48px / 1.2</span>
+                        </div>
+                    </div>
+
+                    <!-- Body Lg -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200/50 pb-8 hover:bg-slate-50/50 p-4 rounded-[2rem] transition-colors">
+                        <div class="md:w-1/4">
+                            <span class="text-xs font-mono text-slate-400 font-bold uppercase tracking-widest">Body Large</span>
+                            <div class="text-[10px] text-slate-400 mt-1">Inter / Medium</div>
+                        </div>
+                        <div class="md:w-1/2">
+                            <p class="font-sans text-lg font-medium text-slate-600 leading-relaxed">
+                                Um texto de descrição ligeiramente maior, ideal para subtítulos ou introduções de seções importantes que exigem atenção.
+                            </p>
+                        </div>
+                        <div class="md:w-1/4 md:text-right">
+                            <span class="text-xs font-mono bg-white px-3 py-1 rounded-full shadow-sm text-slate-500">18px / 1.6</span>
+                        </div>
+                    </div>
+
+                    <!-- Body -->
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 hover:bg-slate-50/50 p-4 rounded-[2rem] transition-colors">
+                        <div class="md:w-1/4">
+                            <span class="text-xs font-mono text-slate-400 font-bold uppercase tracking-widest">Body Regular</span>
+                            <div class="text-[10px] text-slate-400 mt-1">Inter / Regular</div>
+                        </div>
+                        <div class="md:w-1/2">
+                            <p class="font-sans text-base font-normal text-slate-600 leading-relaxed">
+                                O corpo de texto principal utilizado em parágrafos, cards e conteúdos de leitura longa. Mantém alta legibilidade em todas as telas.
+                            </p>
+                        </div>
+                        <div class="md:w-1/4 md:text-right">
+                            <span class="text-xs font-mono bg-white px-3 py-1 rounded-full shadow-sm text-slate-500">16px / 1.5</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Cores -->
+    <section id="colors" class="py-24 px-6 relative z-10 w-full">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 animate-reveal">
+                <span class="text-sm font-mono text-secondary font-bold tracking-widest uppercase mb-2 block">02 / Identidade Visal</span>
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-primary mb-4">Sistema de Cores</h2>
+                <p class="text-slate-600 max-w-2xl font-medium text-lg leading-relaxed">
+                    Uma paleta curada projetada para garantir contraste acessível (AAA), modernidade visual e apelo magnético.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                <!-- Cores Principais -->
+                <div class="space-y-6">
+                    <h3 class="font-display text-2xl font-bold text-primary border-b border-slate-300/50 pb-4">Cores Semânticas</h3>
+                    
+                    <div class="grid grid-cols-2 gap-4">
+                        <!-- Primary -->
+                        <div class="glass-card p-4 rounded-[2rem] flex flex-col group cursor-pointer hover:border-primary transition-colors">
+                            <div class="h-24 bg-primary rounded-xl mb-4 shadow-inner"></div>
+                            <span class="font-bold text-primary font-display mb-1 text-lg">Primary</span>
+                            <span class="text-xs font-mono text-slate-500 bg-white px-2 py-1 flex w-fit rounded shadow-sm">#0f172a / Slate 900</span>
+                            <span class="mt-4 text-[11px] font-medium text-slate-500">Fundo escuro, textos principais</span>
+                        </div>
+                        
+                        <!-- Secondary -->
+                        <div class="glass-card p-4 rounded-[2rem] flex flex-col group cursor-pointer hover:border-secondary transition-colors">
+                            <div class="h-24 bg-secondary rounded-xl mb-4 shadow-inner relative overflow-hidden">
+                                <div class="absolute inset-0 bg-white/20 w-full h-full transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" style="background-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);"></div>
+                            </div>
+                            <span class="font-bold text-secondary font-display mb-1 text-lg">Secondary</span>
+                            <span class="text-xs font-mono text-slate-500 bg-white px-2 py-1 flex w-fit rounded shadow-sm">#0d9488 / Green 400</span>
+                            <span class="mt-4 text-[11px] font-medium text-slate-500">Botões principais, destaques, links</span>
+                        </div>
+
+                        <!-- Accent -->
+                        <div class="col-span-2 glass-card p-4 rounded-[2rem] flex gap-6 items-center group cursor-pointer hover:border-accent transition-colors">
+                            <div class="h-16 w-1/3 bg-accent rounded-xl shadow-inner relative overflow-hidden">
+                                <div class="absolute inset-0 bg-white/20 w-full h-full transform -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" style="background-image: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);"></div>
+                            </div>
+                            <div class="flex flex-col w-2/3">
+                                <span class="font-bold text-accent font-display mb-1 text-lg">Accent (Warning/Energy)</span>
+                                <span class="text-xs font-mono text-slate-500 bg-white px-2 py-1 flex w-fit rounded shadow-sm mb-2">#f97316 / Orange 500</span>
+                                <span class="text-[11px] font-medium text-slate-500">Utilizado para trazer calor, avisos e pequenas quebras de monotonia.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gradientes e Neutros -->
+                <div class="space-y-6">
+                    <h3 class="font-display text-2xl font-bold text-primary border-b border-slate-300/50 pb-4">Backgrounds & Gradients</h3>
+                    
+                    <div class="space-y-4">
+                        <!-- Gradient -->
+                        <div class="glass-card p-4 rounded-[2rem] group flex flex-col sm:flex-row items-center gap-6">
+                            <div class="h-24 w-full sm:w-1/2 rounded-xl bg-gradient-to-tr from-secondary to-primary shadow-inner opacity-90 group-hover:opacity-100 transition-opacity relative overflow-hidden">
+                                 <div class="absolute inset-0 bg-white/20 w-full h-full blur-xl animate-pulse"></div>
+                            </div>
+                            <div class="flex flex-col sm:w-1/2">
+                                <span class="font-bold text-primary font-display mb-2 text-lg">Brand Gradient</span>
+                                <span class="text-xs font-mono text-slate-500 bg-white px-2 py-1 rounded shadow-sm block mb-1">from-green-400 to-orange-500</span>
+                                <span class="text-[11px] font-medium text-slate-500 mt-2">Usado em cards premium, ícones de destaque e avatares especiais.</span>
+                            </div>
+                        </div>
+
+                        <!-- Neutral Scale -->
+                        <div class="glass-card p-6 rounded-[2rem]">
+                            <span class="font-bold text-primary font-display mb-4 block text-lg">Neutral Palette</span>
+                            <div class="flex h-12 w-full rounded-xl overflow-hidden shadow-inner border border-slate-200">
+                                <div class="flex-1 bg-slate-50" title="Neutral 50"></div>
+                                <div class="flex-1 bg-slate-100" title="Neutral 100"></div>
+                                <div class="flex-1 bg-slate-200" title="Neutral 200"></div>
+                                <div class="flex-1 bg-slate-400" title="Neutral 400"></div>
+                                <div class="flex-1 bg-slate-600" title="Neutral 600"></div>
+                                <div class="flex-1 bg-slate-800" title="Neutral 800"></div>
+                                <div class="flex-1 bg-slate-900" title="Neutral 900"></div>
+                            </div>
+                            <div class="flex justify-between mt-2 text-[10px] font-mono text-slate-400">
+                                <span>50</span>
+                                <span>900</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. UI Components -->
+    <section id="components" class="py-24 px-6 relative z-10 w-full">
+        <div class="max-w-7xl mx-auto">
+            <div class="mb-16 animate-reveal">
+                <span class="text-sm font-mono text-secondary font-bold tracking-widest uppercase mb-2 block">03 / UI Elements</span>
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-primary mb-4">Componentes</h2>
+                <p class="text-slate-600 max-w-2xl font-medium text-lg leading-relaxed">
+                    Blocos de construção interativos, responsivos e animados, criados para facilitar a composição de páginas complexas.
+                </p>
+            </div>
+
+            <div class="space-y-16">
+                <!-- Botões e Inputs -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+                    
+                    <!-- Buttons -->
+                    <div class="glass-card p-8 rounded-[2.5rem]">
+                        <h3 class="font-display text-2xl font-bold text-primary mb-8 flex items-center gap-3">
+                            <i data-lucide="mouse-pointer-click" class="w-6 h-6 text-secondary"></i> Botões
+                        </h3>
+                        <div class="space-y-6">
+                            <!-- Primary -->
+                            <div class="flex items-center justify-between">
+                                <button class="group relative px-8 py-3.5 bg-primary text-white font-semibold rounded-full overflow-hidden shadow-xl hover:shadow-2xl hover:shadow-primary/30 hover:-translate-y-1 transition-all duration-300 flex items-center gap-2">
+                                    <span class="relative z-10">Primary Action</span>
+                                    <i data-lucide="arrow-right" class="relative z-10 w-4 h-4 group-hover:translate-x-1 transition-transform"></i>
+                                    <div class="absolute inset-0 bg-gradient-to-r from-secondary to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                                </button>
+                                <span class="hidden sm:block text-xs font-mono text-slate-400">Default + Hover 3D</span>
+                            </div>
+                            
+                            <!-- Secondary -->
+                            <div class="flex items-center justify-between">
+                                <button class="group px-8 py-3.5 bg-white text-primary border border-slate-200 font-semibold rounded-full hover:border-secondary hover:text-secondary shadow-sm hover:shadow-md transition-all duration-300 flex items-center gap-2">
+                                    Secondary Outline
+                                </button>
+                                <span class="hidden sm:block text-xs font-mono text-slate-400">Outline Variant</span>
+                            </div>
+
+                            <!-- Glass -->
+                            <div class="flex items-center justify-between">
+                                <button class="group glass-panel backdrop-blur-md px-8 py-3.5 text-primary border border-white/80 font-semibold rounded-full shadow-sm hover:bg-white/90 hover:scale-105 transition-all duration-300 flex items-center gap-2">
+                                    <i data-lucide="play-circle" class="w-5 h-5 text-secondary"></i>
+                                    Glass Button
+                                </button>
+                                <span class="hidden sm:block text-xs font-mono text-slate-400">Blur + Scale</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inputs & Badges -->
+                    <div class="glass-card p-8 rounded-[2.5rem]">
+                        <h3 class="font-display text-2xl font-bold text-primary mb-8 flex items-center gap-3">
+                            <i data-lucide="text-cursor-input" class="w-6 h-6 text-accent"></i> Forms & Badges
+                        </h3>
+                        <div class="space-y-8">
+                            
+                            <!-- Input Focus -->
+                            <div class="w-full">
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                                <div class="relative group">
+                                    <i data-lucide="mail" class="absolute text-slate-400 left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 group-focus-within:text-secondary transition-colors"></i>
+                                    <input type="email" placeholder="nome@empresa.com" class="w-full pl-12 pr-4 py-3.5 bg-white/80 border border-slate-200 rounded-xl outline-none focus:border-secondary focus:ring-4 focus:ring-secondary/20 transition-all shadow-sm font-medium text-primary placeholder:text-slate-400">
+                                </div>
+                            </div>
+
+                            <!-- Badges -->
+                            <div>
+                                <label class="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 ml-1">Status Badges</label>
+                                <div class="flex flex-wrap gap-3">
+                                    <!-- Success -->
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/50 border border-emerald-200 text-emerald-700 text-xs font-bold uppercase tracking-wider backdrop-blur-sm">
+                                        <i data-lucide="check-circle-2" class="w-3.5 h-3.5"></i> Concluído
+                                    </span>
+                                    
+                                    <!-- Premium/Brand -->
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-secondary/10 to-accent/10 border border-secondary/20 text-secondary text-xs font-bold uppercase tracking-wider backdrop-blur-sm shadow-[0_0_15px_rgba(74,222,128,0.2)]">
+                                        <i data-lucide="gem" class="w-3.5 h-3.5 text-accent"></i> Premium
+                                    </span>
+                                    
+                                    <!-- Neutral -->
+                                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 border border-slate-200 text-slate-600 text-xs font-bold uppercase tracking-wider">
+                                        Rascunho
+                                    </span>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Cards & Layouts -->
+                <div>
+                     <h3 class="font-display text-2xl font-bold text-primary mb-8 flex items-center gap-3">
+                        <i data-lucide="layout-grid" class="w-6 h-6 text-primary"></i> Cards & Layouts
+                    </h3>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        
+                        <!-- Interactive Feature Card -->
+                        <div class="glass-card p-6 rounded-[2rem] group cursor-pointer flex flex-col items-start bg-white/40">
+                            <div class="w-12 h-12 rounded-xl bg-white shadow-sm flex items-center justify-center text-secondary mb-6 group-hover:scale-110 group-hover:rotate-6 transition-transform duration-300">
+                                <i data-lucide="zap" class="w-6 h-6"></i>
+                            </div>
+                            <h4 class="font-display text-lg font-bold text-primary mb-2">Desempenho Rápido</h4>
+                            <p class="text-sm text-slate-600 font-medium mb-4 leading-relaxed line-clamp-2">
+                                Otimizado para máxima velocidade de carregamento, com animações suportadas por GPU.
+                            </p>
+                            <span class="mt-auto text-xs font-bold text-secondary uppercase tracking-widest flex items-center gap-1 group-hover:gap-2 transition-all">
+                                Saiba Mais <i data-lucide="arrow-right" class="w-3 h-3"></i>
+                            </span>
+                        </div>
+
+                        <!-- Image/Media Card with Gradient Overlay -->
+                        <div class="relative w-full h-[280px] rounded-[2rem] overflow-hidden group perspective-1000 shadow-lg border border-white/50">
+                            <img src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=600&auto=format&fit=crop" alt="Abstract" class="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700 ease-in-out">
+                            <div class="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/30 to-transparent"></div>
+                            <div class="absolute inset-0 p-6 flex flex-col justify-end">
+                                <div class="glass-panel w-fit px-2.5 py-1 rounded-full mb-3 border-white/20">
+                                    <span class="text-[10px] text-white font-bold uppercase tracking-widest flex items-center gap-1">
+                                        <i data-lucide="image" class="w-3 h-3"></i> Mídia
+                                    </span>
+                                </div>
+                                <h4 class="font-display text-xl font-bold text-white mb-1">Mídia Interativa</h4>
+                                <p class="text-xs text-white/70 font-medium line-clamp-1">Suporte completo a imagens e efeitos blur.</p>
+                            </div>
+                            <!-- Tooltip On Hover (Top Right) -->
+                            <div class="absolute top-4 right-4 bg-white px-3 py-1.5 rounded-lg shadow-xl opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 pointer-events-none">
+                                <span class="text-xs font-bold text-primary">Visualizar</span>
+                                <!-- Tooltip arrow -->
+                                <div class="absolute -bottom-1 right-3 w-2 h-2 bg-white rotate-45"></div>
+                            </div>
+                        </div>
+
+                        <!-- Pricing/Data Card -->
+                        <div class="glass-card p-6 rounded-[2rem] relative overflow-hidden bg-white/60 border-t-4 border-t-secondary border-l-white/60 border-r-white/60 border-b-white/60 flex flex-col h-full hover:-translate-y-2 hover:shadow-2xl transition-all duration-300">
+                            <div class="absolute -right-10 -top-10 w-32 h-32 bg-secondary/10 rounded-full blur-3xl"></div>
+                            
+                            <span class="text-xs font-bold uppercase tracking-widest text-slate-500 mb-1">Assinatura</span>
+                            <div class="flex items-baseline gap-1 mb-6">
+                                <span class="font-display text-4xl font-extrabold text-primary">R$99</span>
+                                <span class="text-sm font-medium text-slate-500">/mês</span>
+                            </div>
+                            
+                            <ul class="space-y-3 mb-8 flex-1">
+                                <li class="flex items-center gap-3 text-sm font-medium text-slate-700">
+                                    <div class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600"><i data-lucide="check" class="w-3 h-3"></i></div>
+                                    Acesso Completo
+                                </li>
+                                <li class="flex items-center gap-3 text-sm font-medium text-slate-700">
+                                    <div class="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-600"><i data-lucide="check" class="w-3 h-3"></i></div>
+                                    Atualizações Grátis
+                                </li>
+                                <li class="flex items-center gap-3 text-sm font-medium text-slate-400">
+                                    <div class="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-slate-400"><i data-lucide="x" class="w-3 h-3"></i></div>
+                                    Suporte Premium
+                                </li>
+                            </ul>
+
+                            <button class="w-full py-3 bg-slate-100 hover:bg-secondary hover:text-white text-primary font-bold rounded-xl transition-colors duration-300 text-sm border border-slate-200 hover:border-secondary">
+                                Selecionar Plano
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Ícones e Animações -->
+    <section id="icons" class="py-24 px-6 relative z-10 w-full mb-12">
+        <div class="max-w-7xl mx-auto space-y-16">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <!-- Icons -->
+                <div>
+                     <div class="mb-10 animate-reveal">
+                        <span class="text-sm font-mono text-secondary font-bold tracking-widest uppercase mb-2 block">04 / Assets</span>
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-primary mb-4">Ícones & Símbolos</h2>
+                        <p class="text-slate-600 font-medium text-base leading-relaxed">
+                            Utilizamos <span class="font-bold">Lucide Icons</span> para interfaces pela leveza e clareza de traços.
+                        </p>
+                    </div>
+
+                    <div class="glass-card p-8 rounded-[2.5rem] grid grid-cols-4 sm:grid-cols-5 gap-6 gap-y-8 bg-white/60">
+                        <!-- Icon Items -->
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                            <i data-lucide="layers" class="w-6 h-6 text-slate-500 group-hover:text-secondary group-hover:-translate-y-1 transition-all"></i>
+                            <span class="text-[9px] font-mono text-slate-400 uppercase">Layers</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                            <i data-lucide="play" class="w-6 h-6 text-slate-500 group-hover:text-accent group-hover:-translate-y-1 transition-all fill-current"></i>
+                            <span class="text-[9px] font-mono text-slate-400 uppercase">Sparkles</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                            <i data-lucide="settings" class="w-6 h-6 text-slate-500 group-hover:text-primary group-hover:rotate-90 transition-all duration-300"></i>
+                            <span class="text-[9px] font-mono text-slate-400 uppercase">Settings</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                            <i data-lucide="compass" class="w-6 h-6 text-slate-500 group-hover:text-secondary hover:animate-[spin-slow_2s_linear_infinite] transition-all"></i>
+                            <span class="text-[9px] font-mono text-slate-400 uppercase">Compass</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                            <i data-lucide="bell" class="w-6 h-6 text-slate-500 group-hover:text-accent group-hover:animate-ping transition-all"></i>
+                            <span class="text-[9px] font-mono text-slate-400 uppercase">Bell</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                            <i data-lucide="globe" class="w-6 h-6 text-slate-500 group-hover:text-secondary group-hover:-translate-y-1 transition-all"></i>
+                            <span class="text-[9px] font-mono text-slate-400 uppercase">Globe</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                            <i data-lucide="lock" class="w-6 h-6 text-slate-500 group-hover:text-emerald-500 group-hover:-translate-y-1 transition-all"></i>
+                            <span class="text-[9px] font-mono text-slate-400 uppercase">Security</span>
+                        </div>
+                        <div class="flex flex-col items-center gap-2 group cursor-pointer">
+                            <i data-lucide="bar-chart-2" class="w-6 h-6 text-slate-500 group-hover:text-secondary group-hover:-translate-y-1 transition-all"></i>
+                            <span class="text-[9px] font-mono text-slate-400 uppercase">Data</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Animations Info (Carousel logic) -->
+                <div>
+                     <div class="mb-10 animate-reveal">
+                        <span class="text-sm font-mono text-secondary font-bold tracking-widest uppercase mb-2 block">05 / Dynamics</span>
+                        <h2 class="font-display text-3xl md:text-4xl font-bold text-primary mb-4">Animação</h2>
+                        <p class="text-slate-600 font-medium text-base leading-relaxed">
+                            Interações fluídas com <span class="font-mono text-sm bg-white/50 px-1 rounded">transition-all duration-300</span> e keyframes customizados no Tailwind.
+                        </p>
+                    </div>
+                    
+                    <div class="glass-card p-6 rounded-[2.5rem] bg-white/60 h-[280px] overflow-hidden relative">
+                        <!-- Beams on background -->
+                        <div class="absolute inset-0 z-0 opacity-20">
+                             <div class="beam-h-element animate-beam-h" style="top:30%;"></div>
+                             <div class="beam-h-element animate-beam-h" style="top:70%; animation-direction: reverse; animation-delay: 2s;"></div>
+                        </div>
+
+                        <div class="relative z-10 space-y-4">
+                            <!-- Example of slide up -->
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center group">
+                                <span class="font-semibold text-sm text-primary">Fade & Slide In</span>
+                                <span class="text-xs font-mono text-secondary bg-green-50 px-2 py-1 rounded">animate-slide-up</span>
+                            </div>
+
+                            <!-- Example of Pulse Glow -->
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center group">
+                                <span class="font-semibold text-sm text-primary flex items-center gap-2">
+                                    <span class="w-2 h-2 rounded-full bg-secondary animate-pulse-glow"></span>
+                                    Pulse Glow
+                                </span>
+                                <span class="text-xs font-mono text-secondary bg-green-50 px-2 py-1 rounded">animate-pulse-glow</span>
+                            </div>
+
+                             <!-- Example of Shimmer -->
+                            <div class="bg-white p-4 rounded-xl shadow-sm border border-slate-200 flex justify-between items-center group overflow-hidden relative">
+                                <div class="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-slate-100 to-transparent transform -translate-x-full animate-[shimmer_2s_infinite]"></div>
+                                <span class="font-semibold text-sm text-primary relative z-10 w-full">Skeleton / Shimmer</span>
+                                <span class="text-xs font-mono text-secondary bg-green-50 px-2 py-1 rounded relative z-10">animate-[shimmer_...]</span>
+                            </div>
+                        </div>
+
+                        <!-- Add keyframe dynamically for shimmer -->
+                        <style>
+                            @keyframes shimmer {
+                                100% { transform: translateX(100%); }
+                            }
+                        </style>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="w-full py-12 text-center border-t border-slate-200/50 glass-panel">
+        <p class="font-display font-bold text-slate-800 flex items-center justify-center gap-2">
+            Modo<span class="text-secondary">Criador</span> 
+            <i data-lucide="zap" class="w-4 h-4 text-accent"></i>
+        </p>
+        <p class="text-xs font-mono text-slate-500 mt-2">Design System • Todos os direitos reservados.</p>
+    </footer>
+
+    <!-- Init Lucide -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

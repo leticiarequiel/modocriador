@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Modo Criador - Hero</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind Config Based on Design System -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Plus Jakarta Sans', 'sans-serif'],
+                        mono: ['Space Mono', 'monospace'],
+                    },
+                    colors: {
+                        primary: '#0f172a',    // slate-900
+                        secondary: '#4ade80',  // green-400
+                        accent: '#f97316',     // orange-500
+                        neutral: {
+                            50: '#f8fafc',
+                            100: '#f1f5f9',
+                            200: '#e2e8f0',
+                            800: '#1e293b',
+                            900: '#0f172a',
+                        },
+                    },
+                    animation: {
+                        'slide-up': 'slideUp 0.8s ease-out forwards',
+                        'reveal': 'revealUp 1.0s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                        'beam-h': 'beam-h 5s infinite',
+                        'beam-v': 'beam-v 5s infinite',
+                        'pulse-glow': 'pulseGlow 2s infinite',
+                    },
+                    keyframes: {
+                        slideUp: { 'to': { opacity: '1', transform: 'translateY(0)' } },
+                        revealUp: { 
+                            '0%': { clipPath: 'inset(100% 0 0 0)', transform: 'translateY(20px)', opacity: '0' },
+                            '100%': { clipPath: 'inset(0 0 0 0)', transform: 'translateY(0)', opacity: '1' }
+                        },
+                        'beam-h': {
+                            '0%': { left: '-200px', opacity: '0' },
+                            '10%': { opacity: '1' },
+                            '90%': { opacity: '1' },
+                            '100%': { left: '100%', opacity: '0' }
+                        },
+                        'beam-v': {
+                            '0%': { top: '-200px', opacity: '0' },
+                            '10%': { opacity: '1' },
+                            '90%': { opacity: '1' },
+                            '100%': { top: '100%', opacity: '0' }
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: 1, transform: 'scale(1)' },
+                            '50%': { opacity: .7, transform: 'scale(1.05)', filter: 'drop-shadow(0 0 15px rgba(74, 222, 128, 0.5))' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Styles from Design System -->
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #cfddea; color: #0f172a; }
+        h1, h2, h3, h4, h5, h6 { font-family: 'Plus Jakarta Sans', sans-serif; }
+        
+        :root {
+            --beam-color: #4ade80;
+            --grid-color: rgba(15, 23, 42, 0.05);
+        }
+
+        .grid-bg {
+            background-image: 
+                linear-gradient(to right, var(--grid-color) 1px, transparent 1px),
+                linear-gradient(to bottom, var(--grid-color) 1px, transparent 1px);
+            background-size: 80px 80px;
+        }
+
+        .beam-h-element {
+            position: absolute; height: 1px; width: 200px;
+            background: linear-gradient(90deg, transparent, var(--beam-color), transparent);
+            z-index: 10; opacity: 0;
+        }
+        .beam-v-element {
+            position: absolute; width: 1px; height: 200px;
+            background: linear-gradient(180deg, transparent, var(--beam-color), transparent);
+            z-index: 10; opacity: 0;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+        }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Border Gradients */
+        [style*="--border-gradient"]::before {
+            content: ""; position: absolute; inset: 0; padding: 2px;
+            border-radius: var(--border-radius-before, inherit);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            background: var(--border-gradient); pointer-events: none;
+        }
+        
+        .animate-slide-up { opacity: 0; transform: translateY(20px); animation-delay: var(--delay, 0s); }
+        .animate-reveal { opacity: 0; animation-delay: var(--delay, 0s); }
+    </style>
+</head>
+<body class="antialiased min-h-screen relative overflow-x-hidden">
+
+    <!-- Background Elements -->
+    <div class="fixed inset-0 z-[-1] grid-bg"></div>
+    <div class="fixed top-0 left-0 w-full h-[500px] bg-gradient-to-br from-green-100/50 via-white/30 to-orange-100/30 blur-3xl rounded-full z-[-1] opacity-60 pointer-events-none transform -translate-y-1/2"></div>
+    <div class="fixed bottom-0 right-0 w-[600px] h-[600px] bg-gradient-to-tl from-slate-200/50 via-green-50/40 to-transparent blur-3xl rounded-full z-[-1] opacity-60 pointer-events-none transform translate-y-1/3 translate-x-1/3"></div>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center py-20 px-6 relative z-10 w-full">
+        <div class="max-w-4xl mx-auto w-full flex flex-col items-center text-center">
+            
+            <!-- Pre-Headline -->
+            <p class="font-sans text-sm md:text-base font-bold uppercase tracking-widest text-slate-500 animate-slide-up mb-6" style="--delay: 0.1s;">
+                Para experts, criadores e profissionais que gravam com celular ou câmera
+            </p>
+
+            <!-- Headline -->
+            <h1 class="font-display text-5xl sm:text-6xl md:text-7xl font-bold text-primary leading-[1.1] tracking-tight mb-12 animate-reveal" style="--delay: 0.3s;">
+                A Câmera Não é o Seu Problema. <br class="hidden sm:block" /> Falta de <span class="text-secondary">Método</span> é.
+            </h1>
+
+            <!-- Video Container -->
+            <div class="w-full max-w-2xl glass-card rounded-[2rem] p-4 md:p-6 mx-auto animate-slide-up relative overflow-hidden" style="--delay: 0.5s; position: relative; --border-gradient: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.1), rgba(74,222,128,0.5)); --border-radius-before: 2rem;">
+                 
+                <!-- Glow decorativo atrás do vídeo -->
+                <div class="absolute inset-0 bg-secondary/10 rounded-full blur-3xl transform scale-150 z-[-1]"></div>
+
+                <!-- Vturb Video -->
+                <vturb-smartplayer id="vid-6967f439fc0e7a38b23cad29" style="display: block; margin: 0 auto; width: 100%; max-width: 400px;"></vturb-smartplayer>
+                <script type="text/javascript">
+                    var s=document.createElement("script");
+                    s.src="https://scripts.converteai.net/808eb86e-5343-4bb3-a93a-b5c65c959b16/players/6967f439fc0e7a38b23cad29/v4/player.js";
+                    s.async=!0;
+                    document.head.appendChild(s);
+                </script>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Pain Points Section -->
+    <section class="py-32 px-6 relative z-10 w-full overflow-hidden">
+        <!-- Semi-transparent dark overlay (lets fixed grid-bg show through) -->
+        <div class="absolute inset-0 bg-slate-900/88 z-[-2]"></div>
+        
+        <!-- Decoration Beams -->
+        <div class="absolute top-1/4 left-0 w-full h-px opacity-20 z-[-1]">
+            <div class="beam-h-element animate-beam-h" style="animation-duration: 8s;"></div>
+        </div>
+        <div class="absolute bottom-1/3 left-0 w-full h-px opacity-10 z-[-1]">
+            <div class="beam-h-element animate-beam-h" style="animation-duration: 12s; animation-delay: 3s;"></div>
+        </div>
+
+        <!-- Ambient Glows -->
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-secondary/8 rounded-full blur-[120px] z-[-1] pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/5 rounded-full blur-[100px] z-[-1] pointer-events-none transform -translate-x-1/2 translate-y-1/2"></div>
+
+        <div class="max-w-6xl mx-auto relative z-10">
+            
+            <!-- Section Header -->
+            <div class="text-center mb-20 animate-slide-up" style="--delay: 0.2s;">
+                <div class="inline-flex items-center gap-3 px-5 py-2 rounded-full border border-white/10 bg-white/5 backdrop-blur-md text-accent text-sm font-bold uppercase tracking-[0.2em] mb-8 shadow-xl">
+                    <span class="flex h-2 w-2 relative">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-accent"></span>
+                    </span>
+                    Momento de Sinceridade
+                </div>
+                <h2 class="font-display text-5xl md:text-6xl font-black text-white leading-[1.1] tracking-tighter mb-8">
+                    Você se reconhece <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-accent via-red-500 to-orange-400">nestes cenários?</span>
+                </h2>
+                <p class="text-xl text-slate-400 max-w-2xl mx-auto font-medium leading-relaxed">
+                    Se você marcar pelo menos <strong class="text-white text-2xl font-black underline decoration-accent/50 underline-offset-4">1 ponto</strong> abaixo, a sua jornada de transformação começa aqui.
+                </p>
+            </div>
+
+            <!-- Pain Points - Interactive Checklist (Single Column) -->
+            <style>
+                .checklist-item {
+                    position: relative;
+                    display: flex;
+                    align-items: flex-start;
+                    gap: 1.25rem;
+                    padding: 1.5rem 2rem;
+                    border-radius: 1.5rem;
+                    border: 1px solid rgba(74, 222, 128, 0.15);
+                    background: rgba(255, 255, 255, 0.03);
+                    backdrop-filter: blur(12px);
+                    cursor: pointer;
+                    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+                    overflow: hidden;
+                    user-select: none;
+                }
+                .checklist-item::before {
+                    content: "";
+                    position: absolute;
+                    inset: 0;
+                    border-radius: 1.5rem;
+                    padding: 1px;
+                    background: linear-gradient(135deg, rgba(74,222,128,0.3), transparent, rgba(74,222,128,0.1));
+                    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                    -webkit-mask-composite: xor;
+                    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+                    mask-composite: exclude;
+                    pointer-events: none;
+                }
+                .checklist-item:hover {
+                    background: rgba(74, 222, 128, 0.06);
+                    border-color: rgba(74, 222, 128, 0.35);
+                    transform: translateX(6px);
+                    box-shadow: 0 0 30px rgba(74, 222, 128, 0.08);
+                }
+                .checklist-item.checked {
+                    background: rgba(74, 222, 128, 0.08);
+                    border-color: rgba(74, 222, 128, 0.4);
+                    box-shadow: 0 0 40px rgba(74, 222, 128, 0.12), inset 0 0 30px rgba(74, 222, 128, 0.04);
+                    transform: translateX(6px);
+                }
+                .checklist-item .check-box {
+                    flex-shrink: 0;
+                    width: 2rem;
+                    height: 2rem;
+                    border-radius: 0.5rem;
+                    border: 2px solid rgba(74, 222, 128, 0.5);
+                    background: transparent;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+                    margin-top: 0.1rem;
+                }
+                .checklist-item:hover .check-box {
+                    border-color: rgba(74, 222, 128, 0.9);
+                    background: rgba(74, 222, 128, 0.08);
+                    box-shadow: 0 0 12px rgba(74, 222, 128, 0.3);
+                }
+                .checklist-item.checked .check-box {
+                    border-color: #ef4444;
+                    background: rgba(239, 68, 68, 0.12);
+                    box-shadow: 0 0 16px rgba(239, 68, 68, 0.35);
+                }
+                .checklist-item .check-icon-neutral {
+                    display: block;
+                    transition: all 0.25s ease;
+                }
+                .checklist-item .check-icon-active {
+                    display: none;
+                    transition: all 0.25s ease;
+                }
+                .checklist-item.checked .check-icon-neutral {
+                    display: none;
+                }
+                .checklist-item.checked .check-icon-active {
+                    display: block;
+                }
+                .checklist-item .item-icon {
+                    flex-shrink: 0;
+                    width: 2.75rem;
+                    height: 2.75rem;
+                    border-radius: 0.875rem;
+                    background: rgba(30, 41, 59, 0.6);
+                    border: 1px solid rgba(74, 222, 128, 0.2);
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: #4ade80;
+                    transition: all 0.35s ease;
+                    margin-top: 0.05rem;
+                }
+                .checklist-item:hover .item-icon,
+                .checklist-item.checked .item-icon {
+                    background: rgba(74, 222, 128, 0.12);
+                    border-color: rgba(74, 222, 128, 0.5);
+                    box-shadow: 0 0 20px rgba(74, 222, 128, 0.2);
+                }
+                .checklist-item .item-glow {
+                    position: absolute;
+                    right: -40px;
+                    top: -40px;
+                    width: 120px;
+                    height: 120px;
+                    background: rgba(74, 222, 128, 0.06);
+                    border-radius: 50%;
+                    filter: blur(30px);
+                    pointer-events: none;
+                    transition: all 0.5s ease;
+                    opacity: 0;
+                }
+                .checklist-item.checked .item-glow {
+                    opacity: 1;
+                    background: rgba(74, 222, 128, 0.15);
+                }
+            </style>
+
+            <div class="flex flex-col gap-4 mb-24 max-w-3xl mx-auto w-full">
+
+                <!-- Item 1 -->
+                <div class="checklist-item" onclick="this.classList.toggle('checked'); lucide.createIcons();" id="check-item-1">
+                    <div class="item-glow"></div>
+                    <div class="check-box">
+                        <svg class="check-icon-neutral w-4 h-4 text-green-400 opacity-40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg class="check-icon-active w-4 h-4 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="item-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 16v-8a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v8"/><line x1="2" y1="20" x2="22" y2="20"/><line x1="15" y1="8" x2="19" y2="4"/><line x1="19" y1="4" x2="22" y2="7"/><line x1="15" y1="4" x2="19" y2="4"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-display text-lg font-bold text-white mb-1 leading-tight">Resultados Aquém do Esperado</h3>
+                        <p class="text-slate-400 font-medium leading-relaxed text-sm md:text-base">
+                            Seus vídeos <span class="text-slate-200 font-semibold">nunca ficam tão bons</span> quanto você visualizou antes de apertar o REC?
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 2 -->
+                <div class="checklist-item" onclick="this.classList.toggle('checked');" id="check-item-2">
+                    <div class="item-glow"></div>
+                    <div class="check-box">
+                        <svg class="check-icon-neutral w-4 h-4 text-green-400 opacity-40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg class="check-icon-active w-4 h-4 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="item-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-display text-lg font-bold text-white mb-1 leading-tight">O "Algo Falta" Constante</h3>
+                        <p class="text-slate-400 font-medium leading-relaxed text-sm md:text-base">
+                            Sempre parece que a luz está ruim, o som está abafado ou a <span class="text-slate-200 font-semibold">imagem não entrega</span> autoridade?
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 3 -->
+                <div class="checklist-item" onclick="this.classList.toggle('checked');" id="check-item-3">
+                    <div class="item-glow"></div>
+                    <div class="check-box">
+                        <svg class="check-icon-neutral w-4 h-4 text-green-400 opacity-40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg class="check-icon-active w-4 h-4 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="item-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-display text-lg font-bold text-white mb-1 leading-tight">Barreira do Equipamento</h3>
+                        <p class="text-slate-400 font-medium leading-relaxed text-sm md:text-base">
+                            Você acredita que só terá qualidade real quando investir em uma <span class="text-slate-200 font-semibold">câmera de milhares de reais</span>?
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 4 -->
+                <div class="checklist-item" onclick="this.classList.toggle('checked');" id="check-item-4">
+                    <div class="item-glow"></div>
+                    <div class="check-box">
+                        <svg class="check-icon-neutral w-4 h-4 text-green-400 opacity-40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg class="check-icon-active w-4 h-4 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="item-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3z"/><path d="M17 2h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-display text-lg font-bold text-white mb-1 leading-tight">Perda de Credibilidade</h3>
+                        <p class="text-slate-400 font-medium leading-relaxed text-sm md:text-base">
+                            Quantas <span class="text-slate-200 font-semibold">oportunidades você já perdeu</span> porque seu vídeo parecia amador demais para seu preço?
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Item 5 -->
+                <div class="checklist-item" onclick="this.classList.toggle('checked');" id="check-item-5">
+                    <div class="item-glow"></div>
+                    <div class="check-box">
+                        <svg class="check-icon-neutral w-4 h-4 text-green-400 opacity-40" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                        <svg class="check-icon-active w-4 h-4 text-red-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <div class="item-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+                    </div>
+                    <div class="flex-1">
+                        <h3 class="font-display text-lg font-bold text-white mb-1 leading-tight">O Ciclo da Frustração</h3>
+                        <p class="text-slate-400 font-medium leading-relaxed text-sm md:text-base">
+                            Se frustra com tutoriais confusos que <span class="text-slate-200 font-semibold">nunca funcionam</span> no seu setup ou na sua realidade prática?
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Resolution Banner Premium Evolution -->
+            <div class="relative glass-card bg-slate-900 border-none text-white p-12 md:p-20 rounded-[3rem] overflow-hidden text-center max-w-5xl mx-auto shadow-[0_0_100px_rgba(74,222,128,0.1)] animate-slide-up group" style="--delay: 0.8s; position: relative; --border-gradient: linear-gradient(135deg, rgba(74,222,128,0.5), transparent, rgba(74,222,128,0.2)); --border-radius-before: 3rem;">
+                <!-- Internal Glows -->
+                <div class="absolute top-0 right-0 w-80 h-80 bg-secondary/10 rounded-full blur-[80px] pointer-events-none transform translate-x-1/2 -translate-y-1/2 group-hover:bg-secondary/20 transition-all duration-1000"></div>
+                <div class="absolute bottom-0 left-0 w-80 h-80 bg-primary rounded-full blur-[80px] pointer-events-none transform -translate-x-1/2 translate-y-1/2"></div>
+                
+                <div class="relative z-10 flex flex-col items-center">
+                    <div class="w-20 h-20 rounded-[1.5rem] bg-gradient-to-br from-secondary/30 to-secondary/5 border border-secondary/40 flex items-center justify-center text-secondary mb-10 shadow-[0_0_40px_rgba(74,222,128,0.3)] animate-pulse-glow">
+                        <i data-lucide="shield-check" class="w-10 h-10"></i>
+                    </div>
+                    
+                    <p class="font-display text-3xl md:text-5xl font-black leading-[1.2] mb-6 text-white tracking-tight">
+                        A realidade é libertadora: <br/>
+                        <span class="text-secondary opacity-50 px-2 line-through">a câmera não é o problema.</span>
+                    </p>
+                    
+                    <div class="p-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent w-full max-w-md mb-8"></div>
+                    
+                    <p class="text-xl md:text-2xl font-medium text-slate-300 max-w-3xl leading-relaxed">
+                        O verdadeiro problema é a ausência de um <span class="text-white font-black px-4 py-1 rounded-lg bg-secondary/10 border border-secondary/30">Método</span> que te ensine os <span class="text-secondary font-black underline decoration-secondary/50 underline-offset-8">fundamentos</span>.
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Modules Section -->
+    <section class="py-24 px-6 relative z-10 w-full overflow-hidden">
+        <!-- Floating blurs specifically for the grid -->
+        <div class="absolute top-1/4 left-0 w-96 h-96 bg-secondary/10 rounded-full blur-3xl opacity-50 z-[-1] pointer-events-none"></div>
+        <div class="absolute bottom-0 right-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-3xl opacity-50 z-[-1] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto">
+            
+            <!-- Section Header -->
+            <div class="text-center mb-16 animate-slide-up" style="--delay: 0.2s;">
+                <p class="text-sm font-bold text-slate-500 uppercase tracking-widest mb-4 inline-flex items-center gap-2">
+                    <span class="w-8 h-px bg-secondary"></span>
+                    Se você chegou até aqui, está pronto para ativar seu Modo Criador
+                    <span class="w-8 h-px bg-secondary"></span>
+                </p>
+                
+                <h2 class="font-display text-4xl md:text-5xl lg:text-5xl font-bold text-primary max-w-4xl mx-auto leading-tight mb-8">
+                    O Ecossistema Completo Para Você Dominar Qualquer Dispositivo e Criar Vídeos que Transmitem Autoridade
+                </h2>
+
+                <div class="flex justify-center mb-16 animate-fade-in" style="--delay: 0.3s;">
+                    <span class="font-display text-lg md:text-xl font-bold text-slate-700 tracking-tight">O Método Modo Criador</span>
+                </div>
+            </div>
+
+            <!-- Modules Grid (Accordion) -->
+            <!-- 8 Módulos em 2 colunas (grid-cols-1 md:grid-cols-2 lg:grid-cols-2) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 items-start">
+                
+                <!-- Accordion Módulo 1 -->
+                <details class="glass-card p-6 rounded-[2rem] group hover:border-secondary/30 transition-all duration-300 relative overflow-hidden animate-slide-up cursor-pointer" style="--delay: 0.3s;">
+                    <summary class="flex items-center gap-4 outline-none marker:content-none list-none [&::-webkit-details-marker]:hidden">
+                        <div class="absolute -right-5 -top-5 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-colors pointer-events-none z-[-1]"></div>
+                        <div class="w-12 h-12 rounded-full flex-shrink-0 bg-slate-100 flex items-center justify-center text-primary border border-white group-hover:bg-secondary group-hover:text-white transition-all shadow-sm">
+                            <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1 block">Módulo 1</span>
+                            <h3 class="font-display text-xl md:text-2xl font-bold text-primary">Fundamentos Essenciais</h3>
+                        </div>
+                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100/50 group-open:rotate-180 transition-transform text-slate-500 border border-transparent group-hover:border-slate-200">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200/50">
+                        <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                            Pare de achar que precisa comprar a câmera do ano. Aprenda a dominar o Tripé da Qualidade (Luz, Imagem e Áudio). Construa seu repertório visual e entenda por que o seu equipamento atual é mais que suficiente.
+                        </p>
+                    </div>
+                </details>
+
+                <!-- Accordion Módulo 2 -->
+                <details class="glass-card p-6 rounded-[2rem] group hover:border-secondary/30 transition-all duration-300 relative overflow-hidden animate-slide-up cursor-pointer" style="--delay: 0.4s;">
+                    <summary class="flex items-center gap-4 outline-none marker:content-none list-none [&::-webkit-details-marker]:hidden">
+                        <div class="absolute -right-5 -top-5 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-colors pointer-events-none z-[-1]"></div>
+                        <div class="w-12 h-12 rounded-full flex-shrink-0 bg-slate-100 flex items-center justify-center text-primary border border-white group-hover:bg-secondary group-hover:text-white transition-all shadow-sm">
+                            <i data-lucide="sun" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1 block">Módulo 2</span>
+                            <h3 class="font-display text-xl md:text-2xl font-bold text-primary">Dando uma Luz</h3>
+                        </div>
+                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100/50 group-open:rotate-180 transition-transform text-slate-500 border border-transparent group-hover:border-slate-200">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200/50">
+                        <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                            A luz molda e transforma qualquer ambiente. Descubra como usar a luz a seu favor, os segredos da temperatura de cor (Kelvin) e monte esquemas profissionais gastando pouco para valorizar seu cenário.
+                        </p>
+                    </div>
+                </details>
+
+                <!-- Accordion Módulo 3 -->
+                <details class="glass-card p-6 rounded-[2rem] group hover:border-secondary/30 transition-all duration-300 relative overflow-hidden animate-slide-up cursor-pointer" style="--delay: 0.5s;">
+                    <summary class="flex items-center gap-4 outline-none marker:content-none list-none [&::-webkit-details-marker]:hidden">
+                        <div class="absolute -right-5 -top-5 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-colors pointer-events-none z-[-1]"></div>
+                        <div class="w-12 h-12 rounded-full flex-shrink-0 bg-slate-100 flex items-center justify-center text-primary border border-white group-hover:bg-secondary group-hover:text-white transition-all shadow-sm">
+                            <i data-lucide="aperture" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1 block">Módulo 3</span>
+                            <h3 class="font-display text-xl md:text-2xl font-bold text-primary">O Segredo (Cinematic)</h3>
+                        </div>
+                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100/50 group-open:rotate-180 transition-transform text-slate-500 border border-transparent group-hover:border-slate-200">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200/50">
+                        <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                            A mágica revelada: Desmistifique o Triângulo de Exposição (ISO, Abertura e Vel.) e abandone o modo auto. Domine a Regra dos Terços, FPS e Resolução para gravar-se com perfeição.
+                        </p>
+                    </div>
+                </details>
+
+                <!-- Accordion Módulo 4 -->
+                <details class="glass-card p-6 rounded-[2rem] group hover:border-secondary/30 transition-all duration-300 relative overflow-hidden animate-slide-up cursor-pointer" style="--delay: 0.6s;">
+                    <summary class="flex items-center gap-4 outline-none marker:content-none list-none [&::-webkit-details-marker]:hidden">
+                        <div class="absolute -right-5 -top-5 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-colors pointer-events-none z-[-1]"></div>
+                        <div class="w-12 h-12 rounded-full flex-shrink-0 bg-slate-100 flex items-center justify-center text-primary border border-white group-hover:bg-secondary group-hover:text-white transition-all shadow-sm">
+                            <i data-lucide="smartphone" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1 block">Módulo 4</span>
+                            <h3 class="font-display text-xl md:text-2xl font-bold text-primary">Desbloqueando iPhone</h3>
+                        </div>
+                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100/50 group-open:rotate-180 transition-transform text-slate-500 border border-transparent group-hover:border-slate-200">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200/50">
+                        <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                            Transforme seu celular em uma câmera pro. Fuja da câmera frontal, descubra os ajustes vitais para evitar variação de luz e aprenda o passo a passo para utilizar o app nativo e o Modo Pro sem perder foco.
+                        </p>
+                    </div>
+                </details>
+
+                <!-- Accordion Módulo 5 -->
+                <details class="glass-card p-6 rounded-[2rem] group hover:border-secondary/30 transition-all duration-300 relative overflow-hidden animate-slide-up cursor-pointer" style="--delay: 0.7s;">
+                    <summary class="flex items-center gap-4 outline-none marker:content-none list-none [&::-webkit-details-marker]:hidden">
+                        <div class="absolute -right-5 -top-5 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-colors pointer-events-none z-[-1]"></div>
+                        <div class="w-12 h-12 rounded-full flex-shrink-0 bg-slate-100 flex items-center justify-center text-primary border border-white group-hover:bg-secondary group-hover:text-white transition-all shadow-sm">
+                            <i data-lucide="bot" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1 block">Módulo 5</span>
+                            <h3 class="font-display text-xl md:text-2xl font-bold text-primary">Desbloqueando Android</h3>
+                        </div>
+                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100/50 group-open:rotate-180 transition-transform text-slate-500 border border-transparent group-hover:border-slate-200">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200/50">
+                        <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                            O truque do dedo para manter contato visual perfeito. Fuja do falso desfoque digital, extraia o máximo de nitidez, domine o Modo Pro nativo e ajuste o obturador para exterminar as listras (flicker).
+                        </p>
+                    </div>
+                </details>
+
+                <!-- Accordion Módulo 6 -->
+                <details class="glass-card p-6 rounded-[2rem] group hover:border-secondary/30 transition-all duration-300 relative overflow-hidden animate-slide-up cursor-pointer" style="--delay: 0.8s;">
+                    <summary class="flex items-center gap-4 outline-none marker:content-none list-none [&::-webkit-details-marker]:hidden">
+                        <div class="absolute -right-5 -top-5 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-colors pointer-events-none z-[-1]"></div>
+                        <div class="w-12 h-12 rounded-full flex-shrink-0 bg-slate-100 flex items-center justify-center text-primary border border-white group-hover:bg-secondary group-hover:text-white transition-all shadow-sm">
+                            <i data-lucide="video" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1 block">Módulo 6</span>
+                            <h3 class="font-display text-xl md:text-2xl font-bold text-primary">A Força da Osmo Pocket 3</h3>
+                        </div>
+                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100/50 group-open:rotate-180 transition-transform text-slate-500 border border-transparent group-hover:border-slate-200">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200/50">
+                        <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                            Extraia o máximo do sensor dedicado. Configurações essenciais para vlogs dinâmicos, domínio do foco automático, uso maestro da tela flip e os segredos dos perfis de cor (Log) superiores.
+                        </p>
+                    </div>
+                </details>
+
+                <!-- Accordion Módulo 7 -->
+                <details class="glass-card p-6 rounded-[2rem] group hover:border-secondary/30 transition-all duration-300 relative overflow-hidden animate-slide-up cursor-pointer" style="--delay: 0.9s;">
+                    <summary class="flex items-center gap-4 outline-none marker:content-none list-none [&::-webkit-details-marker]:hidden">
+                        <div class="absolute -right-5 -top-5 w-24 h-24 bg-secondary/10 rounded-full blur-2xl group-hover:bg-secondary/20 transition-colors pointer-events-none z-[-1]"></div>
+                        <div class="w-12 h-12 rounded-full flex-shrink-0 bg-slate-100 flex items-center justify-center text-primary border border-white group-hover:bg-secondary group-hover:text-white transition-all shadow-sm">
+                            <i data-lucide="mic" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1 block">Módulo 7</span>
+                            <h3 class="font-display text-xl md:text-2xl font-bold text-primary">Ouça Direito</h3>
+                        </div>
+                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100/50 group-open:rotate-180 transition-transform text-slate-500 border border-transparent group-hover:border-slate-200">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200/50">
+                        <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                            Um áudio ruim destrói vídeos perfeitos. Conheça as opções vitais de microfones, saiba onde posicioná-los para um impacto vocal e previna os erros fatais que pulverizam a retenção do seu público.
+                        </p>
+                    </div>
+                </details>
+
+                <!-- Accordion Módulo 8 (Destaque) -->
+                <details class="glass-card p-6 rounded-[2rem] group hover:border-secondary/30 transition-all duration-300 relative overflow-hidden animate-slide-up cursor-pointer" style="--delay: 1.0s;">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-transparent via-transparent to-secondary/10 group-hover:to-secondary/30 transition-colors pointer-events-none z-[-1]"></div>
+                    <div class="absolute inset-0 p-1 pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-[-1]">
+                        <div class="w-full h-full rounded-[2rem]" style="background: linear-gradient(135deg, transparent, rgba(74,222,128,0.5)); -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0); -webkit-mask-composite: xor; padding: 2px;"></div>
+                    </div>
+
+                    <summary class="flex items-center gap-4 outline-none marker:content-none list-none [&::-webkit-details-marker]:hidden relative z-10">
+                        <div class="w-12 h-12 rounded-full flex-shrink-0 bg-slate-100 flex items-center justify-center text-primary border border-white group-hover:bg-primary group-hover:text-secondary transition-all shadow-sm">
+                            <i data-lucide="scissors" class="w-5 h-5"></i>
+                        </div>
+                        <div class="flex-1">
+                            <span class="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest mb-1 block">Módulo 8</span>
+                            <h3 class="font-display text-xl md:text-2xl font-bold text-primary">Editando do Jeito Certo</h3>
+                        </div>
+                        <div class="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center bg-slate-100/50 group-open:rotate-180 transition-transform text-slate-500 border border-transparent group-hover:border-slate-200">
+                            <i data-lucide="chevron-down" class="w-4 h-4"></i>
+                        </div>
+                    </summary>
+                    <div class="pt-4 mt-4 border-t border-slate-200/50 relative z-10">
+                        <p class="text-sm md:text-base text-slate-600 font-medium leading-relaxed">
+                            Passo a passo da edição dinâmica. Domine o corte firme no CapCut/DaVinci e o segredo-mor: Exportação Anti-Compressão Exata para brilhar no Instagram e YT sem perder a glória da qualidade.
+                        </p>
+                    </div>
+                </details>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Bonuses Section -->
+    <section class="py-24 px-6 relative z-10 w-full overflow-hidden relative text-slate-100">
+        <!-- Semi-transparent dark overlay (lets fixed grid-bg show through) -->
+        <div class="absolute inset-0 bg-slate-900/88 z-[-1] pointer-events-none"></div>
+        <!-- Floating blurs for bonuses -->
+        <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-secondary/20 rounded-full blur-[100px] opacity-40 z-0 pointer-events-none transform translate-x-1/3 -translate-y-1/3"></div>
+        <div class="absolute bottom-0 left-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[80px] opacity-30 z-0 pointer-events-none transform -translate-x-1/3 translate-y-1/3"></div>
+
+        <div class="max-w-7xl mx-auto relative z-10">
+            <!-- Section Header -->
+            <div class="text-center mb-20 animate-slide-up" style="--delay: 0.2s;">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-secondary/30 bg-secondary/10 text-secondary text-sm font-bold uppercase tracking-widest mb-6">
+                    <i data-lucide="gift" class="w-4 h-4"></i>
+                    <span>Presentes Exclusivos</span>
+                </div>
+                
+                <h2 class="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-white max-w-4xl mx-auto leading-tight mb-6">
+                    O Que Mais Você Leva <br/>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-secondary to-blue-400">Totalmente de Graça</span>
+                </h2>
+                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+                    Garanta sua vaga hoje e libere imediatamente estes 5 bônus premium projetados para acelerar ainda mais seus resultados.
+                </p>
+            </div>
+
+            <!-- Main Bonuses (Top 2) -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                
+                <!-- Bonus 1: Comunidade -->
+                <div class="relative bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-[2.5rem] flex flex-col group hover:bg-white/10 hover:border-secondary/50 transition-all duration-500 overflow-hidden animate-slide-up hover:-translate-y-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)]" style="--delay: 0.3s;">
+                    <!-- Price Tag -->
+                    <div class="absolute top-6 right-6 flex flex-col items-end">
+                        <span class="text-slate-500 line-through text-sm font-bold">R$ 197,00</span>
+                        <span class="text-secondary font-black text-xl uppercase tracking-tighter">Incluso</span>
+                    </div>
+
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary/20 to-secondary/5 border border-secondary/30 flex items-center justify-center text-secondary mb-6 group-hover:scale-110 group-hover:rotate-3 transition-transform">
+                        <i data-lucide="users" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-white mb-3 tracking-tight">Comunidade VIP de Criadores</h3>
+                    <p class="text-slate-400 leading-relaxed font-medium">
+                        (WhatsApp) Networking, feedback em tempo real e troca de ideias com outros criadores que falam a sua língua e compartilham seus objetivos.
+                    </p>
+                </div>
+
+                <!-- Bonus 2: Aulas ao Vivo -->
+                <div class="relative bg-white/5 border border-white/10 backdrop-blur-xl p-8 rounded-[2.5rem] flex flex-col group hover:bg-white/10 hover:border-secondary/50 transition-all duration-500 overflow-hidden animate-slide-up hover:-translate-y-2 shadow-[0_8px_30px_rgb(0,0,0,0.12)]" style="--delay: 0.4s;">
+                    <!-- Price Tag -->
+                    <div class="absolute top-6 right-6 flex flex-col items-end">
+                        <span class="text-slate-500 line-through text-sm font-bold">R$ 497,00</span>
+                        <span class="text-secondary font-black text-xl uppercase tracking-tighter">Incluso</span>
+                    </div>
+
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-secondary/20 to-secondary/5 border border-secondary/30 flex items-center justify-center text-secondary mb-6 group-hover:scale-110 group-hover:-rotate-3 transition-transform">
+                        <i data-lucide="video" class="w-8 h-8"></i>
+                    </div>
+                    <h3 class="font-display text-2xl font-bold text-white mb-3 tracking-tight">24 Encontros ao Vivo</h3>
+                    <p class="text-slate-400 leading-relaxed font-medium">
+                        Acesso VIP aos nossos encontros ao vivo (2 por mês). Traga seus vídeos, tire suas dúvidas ao vivo e acelere seu progresso com análise direta durante 1 ano.
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- Secondary Bonuses (Bottom 3) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                
+                <!-- Bonus 3: Equipamentos -->
+                <div class="relative bg-white/5 border border-white/10 backdrop-blur-xl p-6 rounded-[2rem] flex flex-col group hover:border-secondary/40 transition-all duration-300 animate-slide-up" style="--delay: 0.5s;">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-slate-800/50 flex items-center justify-center text-white border border-white/5 group-hover:text-secondary transition-colors">
+                            <i data-lucide="camera" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-slate-500 line-through text-xs font-bold block">R$ 67,00</span>
+                            <span class="text-secondary font-bold text-sm uppercase">Incluso</span>
+                        </div>
+                    </div>
+                    <h4 class="font-display text-lg font-bold text-white mb-2 leading-tight">Guia de Equipamentos Custo-Benefício</h4>
+                </div>
+
+                <!-- Bonus 4: Workflow -->
+                <div class="relative bg-white/5 border border-white/10 backdrop-blur-xl p-6 rounded-[2rem] flex flex-col group hover:border-secondary/40 transition-all duration-300 animate-slide-up" style="--delay: 0.6s;">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-slate-800/50 flex items-center justify-center text-white border border-white/5 group-hover:text-secondary transition-colors">
+                            <i data-lucide="workflow" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-slate-500 line-through text-xs font-bold block">R$ 97,00</span>
+                            <span class="text-secondary font-bold text-sm uppercase">Incluso</span>
+                        </div>
+                    </div>
+                    <h4 class="font-display text-lg font-bold text-white mb-2 leading-tight">Workflow de Edição em 30 Minutos</h4>
+                </div>
+
+                <!-- Bonus 5: Checklist -->
+                <div class="relative bg-white/5 border border-white/10 backdrop-blur-xl p-6 rounded-[2rem] flex flex-col group hover:border-secondary/40 transition-all duration-300 animate-slide-up" style="--delay: 0.7s;">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="w-12 h-12 rounded-xl bg-slate-800/50 flex items-center justify-center text-white border border-white/5 group-hover:text-secondary transition-colors">
+                            <i data-lucide="check-square" class="w-5 h-5"></i>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-slate-500 line-through text-xs font-bold block">R$ 47,00</span>
+                            <span class="text-secondary font-bold text-sm uppercase">Incluso</span>
+                        </div>
+                    </div>
+                    <h4 class="font-display text-lg font-bold text-white mb-2 leading-tight">Checklist de Autoavaliação <br><span class="text-sm text-slate-400 font-normal">O Raio-X do Vídeo</span></h4>
+                </div>
+
+            </div>
+        </div>
+        </div>
+    </section>
+
+    <!-- Offer Section / Checkout -->
+    <section class="py-24 px-6 relative z-10 w-full overflow-hidden">
+        <!-- Background Elements (Light theme transition) -->
+        <div class="fixed inset-0 z-[-1] grid-bg opacity-30 pointer-events-none"></div>
+        <div class="absolute top-0 right-0 w-[500px] h-[500px] bg-secondary/10 rounded-full blur-[100px] z-[-1] pointer-events-none transform translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 rounded-full blur-[80px] z-[-1] pointer-events-none transform -translate-x-1/2 translate-y-1/2"></div>
+
+        <div class="max-w-5xl mx-auto flex flex-col lg:flex-row gap-8 lg:gap-12 items-stretch">
+            
+            <!-- Deliverables List Column -->
+            <div class="flex-1 animate-slide-up" style="--delay: 0.2s;">
+                <h2 class="font-display text-4xl md:text-5xl font-bold text-primary mb-8 leading-tight tracking-tight">
+                    Tudo que Você <br class="hidden lg:block"/> Leva Hoje
+                </h2>
+                
+                <div class="space-y-4">
+                    <!-- Item -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/50 transition-colors border border-transparent hover:border-slate-200/50">
+                        <div class="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary flex-shrink-0 mt-1">
+                            <i data-lucide="check" class="w-4 h-4 text-primary"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-primary text-lg block">Acesso Vitalício ao Método</span>
+                            <span class="text-slate-500 font-medium text-sm">Modo Criador (8 módulos + de 30 aulas)</span>
+                        </div>
+                    </div>
+
+                    <!-- Item Bônus -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/50 transition-colors border border-transparent hover:border-slate-200/50">
+                        <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary flex-shrink-0 mt-1">
+                            <i data-lucide="gift" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-primary text-lg block">Bônus 1: Comunidade VIP</span>
+                            <span class="text-slate-500 font-medium text-sm">Acesso exclusivo no WhatsApp</span>
+                        </div>
+                    </div>
+
+                    <!-- Item Bônus -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/50 transition-colors border border-transparent hover:border-slate-200/50">
+                        <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary flex-shrink-0 mt-1">
+                            <i data-lucide="gift" class="w-4 h-4"></i>
+                        </div>
+                        <div>
+                            <span class="font-bold text-primary text-lg block">Bônus 2: 24 Encontros ao Vivo</span>
+                            <span class="text-slate-500 font-medium text-sm">São 2 encontros por mês (1 ano de suporte)</span>
+                        </div>
+                    </div>
+
+                    <!-- Item Bônus Simples (agrupados) -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/50 transition-colors border border-transparent hover:border-slate-200/50">
+                        <div class="w-8 h-8 rounded-full bg-secondary/10 flex items-center justify-center text-secondary flex-shrink-0 mt-1">
+                            <i data-lucide="gift" class="w-4 h-4"></i>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="font-bold text-primary text-lg block">Fast-Track Kits</span>
+                            <span class="text-slate-600 font-medium text-sm flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Bônus 3: Guia de Equipamentos
+                            </span>
+                            <span class="text-slate-600 font-medium text-sm flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Bônus 4: Workflow de Edição em 30 Minutos
+                            </span>
+                            <span class="text-slate-600 font-medium text-sm flex items-center gap-2">
+                                <span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Bônus 5: Checklist de Autoavaliação
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Features extras -->
+                    <div class="flex items-start gap-4 p-4 rounded-2xl hover:bg-white/50 transition-colors border border-transparent hover:border-slate-200/50">
+                        <div class="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center text-primary flex-shrink-0 mt-1">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-primary"></i>
+                        </div>
+                        <div class="flex flex-col gap-1">
+                            <span class="font-bold text-primary text-lg block">Suporte & Atualizações</span>
+                            <span class="text-slate-500 font-medium text-sm">Suporte direto na plataforma e todas as atualizações futuras do método sem custo extra.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Checkout Price Card -->
+            <div class="flex-1 lg:max-w-md w-full animate-slide-up" style="--delay: 0.4s;">
+                <div class="bg-primary text-white rounded-[2.5rem] p-8 md:p-10 shadow-2xl relative overflow-hidden group border border-white/10" style="background: linear-gradient(145deg, #0f172a 0%, #1e293b 100%);">
+                    <!-- Card Background Glows -->
+                    <div class="absolute -top-32 -right-32 w-64 h-64 bg-secondary/20 rounded-full blur-[60px] pointer-events-none group-hover:bg-secondary/30 transition-colors duration-700"></div>
+                    <div class="absolute -bottom-32 -left-32 w-64 h-64 bg-accent/10 rounded-full blur-[60px] pointer-events-none"></div>
+                    
+                    <div class="relative z-10 flex flex-col h-full">
+                        
+                        <!-- Resumo do Valor -->
+                        <div class="mb-4">
+                            <h3 class="font-display text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">RESUMO DO VALOR</h3>
+                            
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-slate-400 text-sm md:text-base">Valor Total dos itens:</span>
+                                <span class="text-slate-500 line-through text-lg font-bold decoration-red-500/50 decoration-2">R$ 1.202,00</span>
+                            </div>
+                            
+                            <div class="flex justify-between items-center mb-6">
+                                <span class="text-slate-300 text-sm md:text-base">Preço Oficial do MODO CRIADOR:</span>
+                                <span class="text-slate-400 line-through text-lg font-bold decoration-red-500/50 decoration-2">R$ 297,00</span>
+                            </div>
+                        </div>
+
+                        <!-- Hoje por assistir -->
+                        <div class="mb-8">
+                            <p class="text-secondary font-bold text-sm uppercase tracking-widest mb-4 inline-block px-3 py-1 rounded-full bg-secondary/10 border border-secondary/20">HOJE, POR ASSISTIR ATÉ AQUI:</p>
+                            <div class="flex items-start gap-2">
+                                <span class="text-xl md:text-2xl font-bold mt-1 text-slate-300">12x</span>
+                                <span class="text-sm font-bold mt-2 text-slate-300">de R$</span>
+                                <span class="font-display text-6xl md:text-7xl font-black text-white tracking-tighter leading-none">19<span class="text-3xl md:text-4xl">,66</span></span>
+                            </div>
+                            <p class="text-slate-400 font-medium mt-3 text-lg">ou R$197 à vista</p>
+                        </div>
+
+                        <div class="mb-10 p-4 rounded-2xl bg-white/5 border border-white/10 flex gap-3 text-slate-300 text-sm font-medium">
+                            <i data-lucide="info" class="w-5 h-5 flex-shrink-0 text-secondary"></i>
+                            <p>Menos de <strong class="text-white">R$ 0,65 por dia</strong> para dominar a técnica de uma vez por todas.</p>
+                        </div>
+
+                        <!-- CTA Button -->
+                        <div class="mt-auto relative">
+                            <div class="absolute inset-0 bg-secondary rounded-full blur-xl opacity-40 group-hover:opacity-60 transition-opacity duration-300 animate-pulse-glow z-0"></div>
+                            <button class="relative z-10 w-full px-8 py-5 bg-secondary text-slate-900 rounded-full font-bold text-sm sm:text-base md:text-lg hover:scale-105 hover:bg-green-400 transition-all shadow-[0_4px_14px_0_rgba(74,222,128,0.39)] hover:shadow-[0_6px_20px_rgba(74,222,128,0.23)] flex items-center justify-center gap-3">
+                                QUERO ATIVAR MEU MODO CRIADOR AGORA
+                                <i data-lucide="arrow-right" class="w-5 h-5"></i>
+                            </button>
+                        </div>
+
+                        <!-- Trust Badges -->
+                        <div class="mt-6 flex flex-col items-center justify-center text-slate-400 text-xs font-medium gap-2">
+                            <div class="flex items-center gap-1.5 justify-center">
+                                <i data-lucide="lock" class="w-3.5 h-3.5"></i>
+                                <span>Pagamento 100% seguro</span>
+                            </div>
+                            <div class="flex items-center gap-3 justify-center text-slate-500">
+                                <div class="flex items-center gap-1"><i data-lucide="credit-card" class="w-4 h-4"></i> Cartão</div>
+                                <span>·</span>
+                                <div class="flex items-center gap-1"><i data-lucide="smartphone-nfc" class="w-4 h-4"></i> PIX</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Init Lucide -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
