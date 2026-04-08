@@ -162,6 +162,9 @@
         </section>
     </main>
 
+    <!-- VSL Delay Wrapper -->
+    <div id="vsl-delay" style="display: none;">
+
     <!-- 2) Pain Points Section (Bento Grid) -->
     <section id="pain-points" class="py-12 lg:py-24 px-6 lg:px-12 max-w-[90rem] mx-auto relative z-10 w-full">
         <!-- Headline -->
@@ -1345,5 +1348,28 @@
         });
     </script>
 
+    </div>
+
+    <!-- Script de Delay do VTurb -->
+    <script type="text/javascript">
+     document.addEventListener("DOMContentLoaded", function() {
+       /* CONFIGURAÇÃO DO DELAY */
+       var SECONDS_TO_WAIT = 478; /* 7 min e 58 seg */
+       var ELEMENT_ID = 'vsl-delay';
+
+       /* Lógica VTurb */
+       var alreadyShown = false;
+       var showElement = function() {
+         if (alreadyShown) return;
+         var element = document.getElementById(ELEMENT_ID);
+         if (element) {
+           element.style.display = "block";
+           alreadyShown = true;
+         }
+       };
+
+       setTimeout(showElement, SECONDS_TO_WAIT * 1000);
+     });
+    </script>
 </body>
 </html>
