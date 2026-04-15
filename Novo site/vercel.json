@@ -1,4 +1,11 @@
 {
+  "redirects": [
+    {
+      "source": "/yt",
+      "destination": "https://go.rodrigobaiao.com/campaign/mc-yt",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/vsl",
